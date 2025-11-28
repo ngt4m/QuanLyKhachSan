@@ -1,0 +1,578 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ - Khách sạn";
+}
+
+@section Styles {
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            overflow: hidden;
+        }
+
+            .hero::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><path d="M0,300 Q300,100 600,300 T1200,300 L1200,600 L0,600 Z" fill="rgba(255,255,255,0.1)"/></svg>') no-repeat bottom;
+                background-size: cover;
+                animation: wave 15s ease-in-out infinite;
+            }
+
+        @@keyframes wave {
+            0%, 100%
+
+        {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-20px);
+        }
+
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            padding: 0 20px;
+            animation: fadeInUp 1s ease;
+        }
+
+        @@keyframes fadeInUp {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        /* Search Box */
+        .search-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-top: 30px;
+            animation: fadeInUp 1s ease 0.3s both;
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+            .form-group label {
+                display: block;
+                color: #333;
+                font-weight: 600;
+                margin-bottom: 8px;
+                font-size: 0.9rem;
+            }
+
+            .form-group input,
+            .form-group select {
+                width: 100%;
+                padding: 12px 15px;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                font-size: 1rem;
+                transition: border-color 0.3s;
+            }
+
+                .form-group input:focus,
+                .form-group select:focus {
+                    outline: none;
+                    border-color: #667eea;
+                }
+
+        .btn-search {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+            .btn-search:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            }
+
+        /* Features Section */
+        .features {
+            padding: 100px 20px;
+            background: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 60px;
+            font-weight: 700;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+            .feature-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 2.5rem;
+        }
+
+        .feature-card h3 {
+            color: #333;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Room Types Section */
+        .room-types {
+            padding: 100px 20px;
+            background: white;
+        }
+
+        .room-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .room-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+            .room-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            }
+
+        .room-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+        }
+
+        .room-content {
+            padding: 30px;
+        }
+
+            .room-content h3 {
+                color: #333;
+                font-size: 1.8rem;
+                margin-bottom: 15px;
+            }
+
+            .room-content p {
+                color: #666;
+                line-height: 1.6;
+                margin-bottom: 20px;
+            }
+
+        .room-price {
+            color: #667eea;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .btn-book {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+            .btn-book:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+                color: white;
+                text-decoration: none;
+            }
+
+        /* Stats Section */
+        .stats {
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+
+        .stat-item h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .stat-item p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2d3748;
+            color: white;
+            padding: 60px 20px 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer h4 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+
+        .footer p,
+        .footer a {
+            color: #cbd5e0;
+            line-height: 1.8;
+            text-decoration: none;
+        }
+
+            .footer a:hover {
+                color: white;
+            }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #4a5568;
+            color: #cbd5e0;
+        }
+
+        @@media (max-width: 768px) {
+            .hero h1
+
+        {
+            font-size: 2.5rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+        }
+
+        .search-form {
+            grid-template-columns: 1fr;
+        }
+
+        .section-title {
+            font-size: 2rem;
+        }
+
+        }
+    </style>
+}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Chào mừng đến với Khách sạn</h1>
+        <p>Trải nghiệm nghỉ dưỡng đẳng cấp với dịch vụ hoàn hảo</p>
+
+        <div class="search-box">
+            <form asp-controller="Rooms" asp-action="Index" method="get" class="search-form">
+                <div class="form-group">
+                    <label>Ngày nhận phòng</label>
+                    <input type="date" name="checkIn" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Ngày trả phòng</label>
+                    <input type="date" name="checkOut" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Số khách</label>
+                    <select name="guests" class="form-control">
+                        <option value="1">1 khách</option>
+                        <option value="2" selected>2 khách</option>
+                        <option value="3">3 khách</option>
+                        <option value="4">4 khách</option>
+                        <option value="5">5+ khách</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn-search">Tìm phòng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+    <div class="container">
+        <h2 class="section-title">Dịch vụ của chúng tôi</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🏨</div>
+                <h3>Phòng hiện đại</h3>
+                <p>Các phòng được trang bị đầy đủ tiện nghi, thiết kế sang trọng và hiện đại</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🍽️</div>
+                <h3>Nhà hàng 5 sao</h3>
+                <p>Thưởng thức các món ăn ngon từ đầu bếp chuyên nghiệp</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏊</div>
+                <h3>Hồ bơi & Spa</h3>
+                <p>Thư giãn tại hồ bơi ngoài trời và dịch vụ spa cao cấp</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚗</div>
+                <h3>Đưa đón sân bay</h3>
+                <p>Dịch vụ đưa đón miễn phí từ sân bay đến khách sạn</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📶</div>
+                <h3>WiFi miễn phí</h3>
+                <p>Kết nối internet tốc độ cao miễn phí trong toàn bộ khách sạn</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Hỗ trợ 24/7</h3>
+                <p>Đội ngũ nhân viên nhiệt tình, sẵn sàng phục vụ bạn mọi lúc</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Room Types Section -->
+<section class="room-types">
+    <div class="container">
+        <h2 class="section-title">Các loại phòng</h2>
+        <div class="room-grid">
+            <div class="room-card">
+                <div class="room-image">🛏️</div>
+                <div class="room-content">
+                    <h3>Phòng Standard</h3>
+                    <p>Phòng tiêu chuẩn với đầy đủ tiện nghi cơ bản, phù hợp cho 2 người</p>
+                    <div class="room-price">Từ 500.000₫ / đêm</div>
+                    <a href="/Rooms" class="btn-book">Đặt phòng ngay</a>
+                </div>
+            </div>
+            <div class="room-card">
+                <div class="room-image">🏨</div>
+                <div class="room-content">
+                    <h3>Phòng Deluxe</h3>
+                    <p>Phòng rộng rãi với view đẹp, thiết kế sang trọng và hiện đại</p>
+                    <div class="room-price">Từ 800.000₫ / đêm</div>
+                    <a href="/Rooms" class="btn-book">Đặt phòng ngay</a>
+                </div>
+            </div>
+            <div class="room-card">
+                <div class="room-image">👑</div>
+                <div class="room-content">
+                    <h3>Phòng Suite</h3>
+                    <p>Phòng cao cấp với không gian riêng tư, dịch vụ VIP đặc biệt</p>
+                    <div class="room-price">Từ 1.500.000₫ / đêm</div>
+                    <a href="/Rooms" class="btn-book">Đặt phòng ngay</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h2>500+</h2>
+                <p>Khách hàng hài lòng</p>
+            </div>
+            <div class="stat-item">
+                <h2>50+</h2>
+                <p>Phòng hiện đại</p>
+            </div>
+            <div class="stat-item">
+                <h2>4.8★</h2>
+                <p>Đánh giá trung bình</p>
+            </div>
+            <div class="stat-item">
+                <h2>24/7</h2>
+                <p>Hỗ trợ khách hàng</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div>
+                <h4>Về chúng tôi</h4>
+                <p>Khách sạn của chúng tôi cam kết mang đến trải nghiệm nghỉ dưỡng tuyệt vời nhất với dịch vụ chuyên nghiệp và tiện nghi hiện đại.</p>
+            </div>
+            <div>
+                <h4>Liên kết nhanh</h4>
+                <p><a asp-controller="Rooms" asp-action="Index">Danh sách phòng</a></p>
+                <p><a asp-controller="Bookings" asp-action="Index">Đặt phòng</a></p>
+                <p><a asp-controller="Home" asp-action="Contact">Liên hệ</a></p>
+            </div>
+            <div>
+                <h4>Liên hệ</h4>
+                <p>📧 Email: info@khachsan.com</p>
+                <p>📞 Điện thoại: 0123 456 789</p>
+                <p>📍 Địa chỉ: Hà Nội, Việt Nam</p>
+            </div>
+            <div>
+                <h4>Giờ làm việc</h4>
+                <p>Lễ tân: 24/7</p>
+                <p>Nhà hàng: 6:00 - 22:00</p>
+                <p>Spa: 8:00 - 20:00</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Quản lý Khách sạn. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+@section Scripts {
+    <script>
+        // Set minimum date for check-in to today
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            const checkInInput = document.querySelector('input[name="checkIn"]');
+            const checkOutInput = document.querySelector('input[name="checkOut"]');
+
+            if (checkInInput) {
+                checkInInput.setAttribute('min', today);
+                checkInInput.value = today;
+            }
+
+            if (checkOutInput) {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                checkOutInput.setAttribute('min', tomorrow.toISOString().split('T')[0]);
+                checkOutInput.value = tomorrow.toISOString().split('T')[0];
+            }
+
+            // Update checkout min date when checkin changes
+            if (checkInInput && checkOutInput) {
+                checkInInput.addEventListener('change', function() {
+                    const checkInDate = new Date(this.value);
+                    checkInDate.setDate(checkInDate.getDate() + 1);
+                    checkOutInput.setAttribute('min', checkInDate.toISOString().split('T')[0]);
+
+                    if (new Date(checkOutInput.value) <= new Date(this.value)) {
+                        checkOutInput.value = checkInDate.toISOString().split('T')[0];
+                    }
+                });
+            }
+        });
+    </script>
+}
