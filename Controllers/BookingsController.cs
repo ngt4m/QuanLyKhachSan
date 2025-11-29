@@ -173,7 +173,7 @@ namespace QuanLyKhachSan.Controllers
                 return NotFound();
             }
 
-            // Only allow cancellation if check-in is at least 24 hours away
+            //Only allow cancellation if check -in is at least 24 hours away
             if (booking.CheckInDate <= DateTime.Now.AddHours(24))
             {
                 TempData["ErrorMessage"] = "Cannot cancel booking within 24 hours of check-in.";

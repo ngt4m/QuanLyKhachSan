@@ -1,183 +1,310 @@
 ﻿@model QuanLyKhachSan.ViewModels.Admin.BookingReportViewModel
 @{
-    ViewData["Title"] = "Booking Report";
+    ViewData["Title"] = "Báo Cáo Đặt Phòng";
     Layout = "_AdminLayout";
 }
 
-<div class="container-fluid">
-    <h1 class="mt-4">Booking Report</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-report.css" />
+}
 
-    <!-- Filter Section -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5 class="mb-0">Report Filters</h5>
-        </div>
-        <div class="card-body">
-            <form method="get" class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label">Start Date</label>
-                    <input type="date" name="startDate" class="form-control" value="@Model.StartDate.ToString("yyyy-MM-dd")">
+<div class="admin-report-page">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="page-title">
+                        <i class="fas fa-chart-line"></i>
+                        Báo Cáo Đặt Phòng
+                    </h1>
+                    <p class="page-subtitle">Thống kê và phân tích dữ liệu đặt phòng</p>
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label">End Date</label>
-                    <input type="date" name="endDate" class="form-control" value="@Model.EndDate.ToString("yyyy-MM-dd")">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">&nbsp;</label>
-                    <button type="submit" class="btn btn-primary w-100">Generate Report</button>
-                </div>
-            </form>
-        </div>
-    </div>
+                <div class="header-right">
 
-    <!-- Summary Cards -->
-    <div class="row mb-4">
-        <div class="col-xl-2 col-md-4">
-            <div class="card bg-primary text-white mb-4">
-                <div class="card-body text-center">
-                    <div class="h5 mb-0">@Model.TotalBookings</div>
-                    <div class="small">Total Bookings</div>
+                    <button class="btn btn-print" onclick="window.print()">
+                        <i class="fas fa-print"></i> In Báo Cáo
+                    </button>
                 </div>
             </div>
         </div>
-        <div class="col-xl-2 col-md-4">
-            <div class="card bg-warning text-white mb-4">
-                <div class="card-body text-center">
-                    <div class="h5 mb-0">@Model.PendingBookings</div>
-                    <div class="small">Pending</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-2 col-md-4">
-            <div class="card bg-info text-white mb-4">
-                <div class="card-body text-center">
-                    <div class="h5 mb-0">@Model.ConfirmedBookings</div>
-                    <div class="small">Confirmed</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-2 col-md-4">
-            <div class="card bg-success text-white mb-4">
-                <div class="card-body text-center">
-                    <div class="h5 mb-0">@Model.CheckedInBookings</div>
-                    <div class="small">Checked In</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-2 col-md-4">
-            <div class="card bg-secondary text-white mb-4">
-                <div class="card-body text-center">
-                    <div class="h5 mb-0">@Model.CheckedOutBookings</div>
-                    <div class="small">Checked Out</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-2 col-md-4">
-            <div class="card bg-danger text-white mb-4">
-                <div class="card-body text-center">
-                    <div class="h5 mb-0">@Model.CancelledBookings</div>
-                    <div class="small">Cancelled</div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Booking Status Distribution -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Booking Status Distribution</h5>
+        <!-- Filter Section -->
+        <div class="filter-card">
+            <div class="filter-header">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Chọn Khoảng Thời Gian</span>
+            </div>
+            <div class="filter-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            <i class="fas fa-calendar-day"></i> Ngày Bắt Đầu
+                        </label>
+                        <input type="date" name="startDate" class="form-control" value="@Model.StartDate.ToString("yyyy-MM-dd")">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            <i class="fas fa-calendar-day"></i> Ngày Kết Thúc
+                        </label>
+                        <input type="date" name="endDate" class="form-control" value="@Model.EndDate.ToString("yyyy-MM-dd")">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="submit" class="btn btn-generate">
+                            <i class="fas fa-chart-bar"></i> Tạo Báo Cáo
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-section">
+            <div class="summary-header">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Tổng Quan</span>
+            </div>
+            <div class="row g-4">
+                <div class="col-xl-2 col-md-4 col-sm-6">
+                    <div class="stat-card total">
+                        <div class="stat-icon">
+                            <i class="fas fa-list"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">@Model.TotalBookings</div>
+                            <div class="stat-label">Tổng Đặt Phòng</div>
+                        </div>
+                        <div class="stat-wave"></div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Status</th>
-                                    <th>Count</th>
-                                    <th>Percentage</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.StatusCounts)
-                                {
-                                    <tr>
-                                        <td>
-                                            <span class="badge bg-@item.StatusName.ToLower()">@item.StatusName</span>
-                                        </td>
-                                        <td>@item.Count</td>
-                                        <td>@item.Percentage.ToString("N1")%</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+
+                <div class="col-xl-2 col-md-4 col-sm-6">
+                    <div class="stat-card pending">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">@Model.PendingBookings</div>
+                            <div class="stat-label">Chờ Xử Lý</div>
+                        </div>
+                        <div class="stat-wave"></div>
+                    </div>
+                </div>
+
+                <div class="col-xl-2 col-md-4 col-sm-6">
+                    <div class="stat-card confirmed">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">@Model.ConfirmedBookings</div>
+                            <div class="stat-label">Đã Xác Nhận</div>
+                        </div>
+                        <div class="stat-wave"></div>
+                    </div>
+                </div>
+
+                <div class="col-xl-2 col-md-4 col-sm-6">
+                    <div class="stat-card checkedin">
+                        <div class="stat-icon">
+                            <i class="fas fa-door-open"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">@Model.CheckedInBookings</div>
+                            <div class="stat-label">Đã Nhận Phòng</div>
+                        </div>
+                        <div class="stat-wave"></div>
+                    </div>
+                </div>
+
+                <div class="col-xl-2 col-md-4 col-sm-6">
+                    <div class="stat-card checkedout">
+                        <div class="stat-icon">
+                            <i class="fas fa-door-closed"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">@Model.CheckedOutBookings</div>
+                            <div class="stat-label">Đã Trả Phòng</div>
+                        </div>
+                        <div class="stat-wave"></div>
+                    </div>
+                </div>
+
+                <div class="col-xl-2 col-md-4 col-sm-6">
+                    <div class="stat-card cancelled">
+                        <div class="stat-icon">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">@Model.CancelledBookings</div>
+                            <div class="stat-label">Đã Hủy</div>
+                        </div>
+                        <div class="stat-wave"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Popular Rooms -->
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Most Popular Rooms</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Room</th>
-                                    <th>Type</th>
-                                    <th>Bookings</th>
-                                    <th>Revenue</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.PopularRooms)
-                                {
+        <!-- Charts Section -->
+        <div class="row g-4">
+            <!-- Status Distribution -->
+            <div class="col-lg-6">
+                <div class="report-card">
+                    <div class="report-card-header">
+                        <div class="header-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <h5>Phân Bố Trạng Thái</h5>
+                    </div>
+                    <div class="report-card-body">
+                        <div class="table-responsive">
+                            <table class="table report-table">
+                                <thead>
                                     <tr>
-                                        <td>@item.RoomName</td>
-                                        <td>@item.RoomType</td>
-                                        <td>@item.BookingCount</td>
-                                        <td>$@item.TotalRevenue.ToString("N2")</td>
+                                        <th>Trạng Thái</th>
+                                        <th>Số Lượng</th>
+                                        <th>Tỷ Lệ</th>
+                                        <th>Biểu Đồ</th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.StatusCounts)
+                                    {
+                                        var statusClass = item.StatusName.ToLower().Replace(" ", "");
+                                        var statusText = "";
+                                        var statusIcon = "";
+
+                                        switch (item.StatusName)
+                                        {
+                                            case "Pending":
+                                                statusText = "Chờ xử lý";
+                                                statusIcon = "clock";
+                                                statusClass = "pending";
+                                                break;
+                                            case "Confirmed":
+                                                statusText = "Đã xác nhận";
+                                                statusIcon = "check-circle";
+                                                statusClass = "confirmed";
+                                                break;
+                                            case "CheckedIn":
+                                                statusText = "Đã nhận phòng";
+                                                statusIcon = "door-open";
+                                                statusClass = "checkedin";
+                                                break;
+                                            case "CheckedOut":
+                                                statusText = "Đã trả phòng";
+                                                statusIcon = "door-closed";
+                                                statusClass = "checkedout";
+                                                break;
+                                            case "Cancelled":
+                                                statusText = "Đã hủy";
+                                                statusIcon = "times-circle";
+                                                statusClass = "cancelled";
+                                                break;
+                                            default:
+                                                statusText = item.StatusName;
+                                                statusIcon = "info-circle";
+                                                break;
+                                        }
+
+                                        <tr>
+                                            <td>
+                                                <span class="status-badge status-@statusClass">
+                                                    <i class="fas fa-@statusIcon"></i>
+                                                    @statusText
+                                                </span>
+                                            </td>
+                                            <td class="count-cell">@item.Count</td>
+                                            <td class="percentage-cell">@item.Percentage.ToString("N1")%</td>
+                                            <td>
+                                                <div class="progress-bar-container">
+                                                    <div class="progress-bar status-@statusClass" style="width: @item.Percentage.ToString("N1")%"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Rooms -->
+            <div class="col-lg-6">
+                <div class="report-card">
+                    <div class="report-card-header">
+                        <div class="header-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h5>Phòng Được Đặt Nhiều Nhất</h5>
+                    </div>
+                    <div class="report-card-body">
+                        <div class="table-responsive">
+                            <table class="table report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Phòng</th>
+                                        <th>Loại</th>
+                                        <th>Số Lượt Đặt</th>
+                                        <th>Doanh Thu</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.PopularRooms)
+                                    {
+                                        <tr>
+                                            <td class="room-name">
+                                                <i class="fas fa-bed"></i>
+                                                @item.RoomName
+                                            </td>
+                                            <td>
+                                                <span class="type-badge">@item.RoomType</span>
+                                            </td>
+                                            <td class="count-cell">
+                                                <span class="booking-count">@item.BookingCount</span>
+                                            </td>
+                                            <td class="revenue-cell">
+                                                <span class="revenue-amount">@item.TotalRevenue.ToString("N0")₫</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Booking Trends -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Booking Trends (Last 12 Months)</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Month</th>
-                                    <th>Bookings</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.BookingTrends)
-                                {
-                                    <tr>
-                                        <td>@item.Period</td>
-                                        <td>@item.BookingCount</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+        <!-- Booking Trends -->
+        <div class="row g-4 mt-2">
+            <div class="col-12">
+                <div class="report-card">
+                    <div class="report-card-header">
+                        <div class="header-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h5>Xu Hướng Đặt Phòng (12 Tháng Gần Nhất)</h5>
+                    </div>
+                    <div class="report-card-body">
+                        <div class="trends-chart">
+                            @foreach (var item in Model.BookingTrends)
+                            {
+                                var maxCount = Model.BookingTrends.Max(t => t.BookingCount);
+                                var heightPercent = maxCount > 0 ? (item.BookingCount * 100.0 / maxCount) : 0;
+
+                                <div class="trend-item">
+                                    <div class="trend-bar-wrapper">
+                                        <div class="trend-bar" style="height: @heightPercent%">
+                                            <span class="trend-value">@item.BookingCount</span>
+                                        </div>
+                                    </div>
+                                    <div class="trend-label">@item.Period</div>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
@@ -185,25 +312,6 @@
     </div>
 </div>
 
-<style>
-    .bg-pending {
-        background-color: #ffc107 !important;
-        color: #212529;
-    }
-
-    .bg-confirmed {
-        background-color: #17a2b8 !important;
-    }
-
-    .bg-checkedin {
-        background-color: #28a745 !important;
-    }
-
-    .bg-checkedout {
-        background-color: #6c757d !important;
-    }
-
-    .bg-cancelled {
-        background-color: #dc3545 !important;
-    }
-</style>
+@section Scripts {
+    <script src="~/js/admin-report.js"></script>
+}
