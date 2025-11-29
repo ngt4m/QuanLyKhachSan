@@ -1,129 +1,332 @@
 ﻿@model List<QuanLyKhachSan.ViewModels.Booking.BookingViewModel>
 @{
-    ViewData["Title"] = "Manage Bookings";
+    ViewData["Title"] = "Quản Lý Đặt Phòng";
     Layout = "_AdminLayout";
 }
 
-<div class="container-fluid">
-    <h1 class="mt-4">Manage Bookings</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-bookings.css" />
+}
 
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-    }
-
-    <div class="card mb-4">
-        <div class="card-header">
-            <i class="fas fa-calendar me-1"></i>
-            Bookings List
+<div class="admin-bookings-page">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="page-title">
+                        <i class="fas fa-calendar-check"></i>
+                        Quản Lý Đặt Phòng
+                    </h1>
+                    <p class="page-subtitle">Xem và quản lý tất cả các đặt phòng</p>
+                </div>
+                <div class="header-right">
+                    <div class="stats-summary">
+                        <div class="stat-item">
+                            <div class="stat-icon pending">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-value">@Model.Count(b => b.Status.ToString() == "Pending")</span>
+                                <span class="stat-label">Chờ xử lý</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon confirmed">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-value">@Model.Count(b => b.Status.ToString() == "Confirmed")</span>
+                                <span class="stat-label">Đã xác nhận</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon total">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-value">@Model.Count()</span>
+                                <span class="stat-label">Tổng số</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>User</th>
-                            <th>Room</th>
-                            <th>Check-in</th>
-                            <th>Check-out</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Created</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var booking in Model)
-                        {
+
+        <!-- Success Message -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert-banner success">
+                <div class="alert-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="alert-content">
+                    <strong>Thành công!</strong>
+                    <p>@TempData["SuccessMessage"]</p>
+                </div>
+                <button type="button" class="btn-close-alert" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        }
+
+        <!-- Filters Section -->
+        <div class="filters-card">
+            <div class="filters-header">
+                <i class="fas fa-filter"></i>
+                <span>Bộ Lọc</span>
+            </div>
+            <div class="filters-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <select class="form-select" id="statusFilter">
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="pending">Chờ xử lý</option>
+                            <option value="confirmed">Đã xác nhận</option>
+                            <option value="checkedin">Đã nhận phòng</option>
+                            <option value="checkedout">Đã trả phòng</option>
+                            <option value="cancelled">Đã hủy</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm theo tên, phòng...">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="date" class="form-control" id="dateFilter" placeholder="Ngày nhận phòng">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-primary w-100" onclick="applyFilters()">
+                            <i class="fas fa-search"></i> Lọc
+                        </button>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-secondary w-100" onclick="resetFilters()">
+                            <i class="fas fa-redo"></i> Đặt lại
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bookings Table Card -->
+        <div class="table-card">
+            <div class="table-card-header">
+                <div class="header-left">
+                    <i class="fas fa-list"></i>
+                    <span>Danh Sách Đặt Phòng</span>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-export" onclick="exportToExcel()">
+                        <i class="fas fa-file-excel"></i> Xuất Excel
+                    </button>
+                </div>
+            </div>
+            <div class="table-card-body">
+                <div class="table-responsive">
+                    <table class="table bookings-table" id="bookingsTable">
+                        <thead>
                             <tr>
-                                <td>@booking.Id</td>
-                                <td>@booking.UserName</td>
-                                <td>@booking.RoomName</td>
-                                <td>@booking.CheckInDate.ToString("MMM dd, yyyy")</td>
-                                <td>@booking.CheckOutDate.ToString("MMM dd, yyyy")</td>
-                                <td>$@booking.TotalPrice.ToString("N2")</td>
-                                <td>
-                                    @{
-                                        var statusClass = booking.Status.ToString().ToLower();
-                                        statusClass = statusClass == "checkedin" ? "checked-in" : statusClass;
-                                        statusClass = statusClass == "checkedout" ? "checked-out" : statusClass;
-                                    }
-                                    <span class="badge bg-@statusClass">@booking.Status</span>
-                                </td>
-                                <td>@booking.CreatedAt.ToString("MMM dd, yyyy")</td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                            Actions
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li>
-                                                <form method="post" asp-action="UpdateBookingStatus" class="d-inline">
-                                                    <input type="hidden" name="id" value="@booking.Id" />
-                                                    <input type="hidden" name="status" value="Confirmed" />
-                                                    <button type="submit" class="dropdown-item">Confirm</button>
-                                                </form>
-                                            </li>
-                                            <li>
-                                                <form method="post" asp-action="UpdateBookingStatus" class="d-inline">
-                                                    <input type="hidden" name="id" value="@booking.Id" />
-                                                    <input type="hidden" name="status" value="CheckedIn" />
-                                                    <button type="submit" class="dropdown-item">Check In</button>
-                                                </form>
-                                            </li>
-                                            <li>
-                                                <form method="post" asp-action="UpdateBookingStatus" class="d-inline">
-                                                    <input type="hidden" name="id" value="@booking.Id" />
-                                                    <input type="hidden" name="status" value="CheckedOut" />
-                                                    <button type="submit" class="dropdown-item">Check Out</button>
-                                                </form>
-                                            </li>
-                                            <li><hr class="dropdown-divider"></li>
-                                            <li>
-                                                <form method="post" asp-action="UpdateBookingStatus" class="d-inline">
-                                                    <input type="hidden" name="id" value="@booking.Id" />
-                                                    <input type="hidden" name="status" value="Cancelled" />
-                                                    <button type="submit" class="dropdown-item text-danger">Cancel</button>
-                                                </form>
-                                            </li>
-                                        </ul>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-hashtag"></i>
+                                        <span>ID</span>
                                     </div>
-                                </td>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-user"></i>
+                                        <span>Khách hàng</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-door-open"></i>
+                                        <span>Phòng</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-calendar-check"></i>
+                                        <span>Nhận phòng</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-calendar-times"></i>
+                                        <span>Trả phòng</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        <span>Tổng tiền</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span>Trạng thái</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-clock"></i>
+                                        <span>Ngày đặt</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-cog"></i>
+                                        <span>Thao tác</span>
+                                    </div>
+                                </th>
                             </tr>
-                        }
-                        @if (!Model.Any())
-                        {
-                            <tr>
-                                <td colspan="9" class="text-center">No bookings found.</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var booking in Model)
+                            {
+                                <tr class="booking-row" data-status="@booking.Status.ToString().ToLower()">
+                                    <td class="id-cell">
+                                        <span class="badge-id">#@booking.Id</span>
+                                    </td>
+                                    <td>
+                                        <div class="user-info">
+                                            <div class="user-avatar">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <span class="user-name">@booking.UserName</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="room-info">
+                                            <i class="fas fa-bed"></i>
+                                            <span>@booking.RoomName</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="date-text">@booking.CheckInDate.ToString("dd/MM/yyyy")</span>
+                                    </td>
+                                    <td>
+                                        <span class="date-text">@booking.CheckOutDate.ToString("dd/MM/yyyy")</span>
+                                    </td>
+                                    <td>
+                                        <span class="price-text">@booking.TotalPrice.ToString("N0")₫</span>
+                                    </td>
+                                    <td>
+                                        @{
+                                            var statusClass = booking.Status.ToString().ToLower();
+                                            var statusText = "";
+                                            var statusIcon = "";
+                                            switch (booking.Status.ToString())
+                                            {
+                                                case "Pending":
+                                                    statusText = "Chờ xử lý";
+                                                    statusIcon = "clock";
+                                                    break;
+                                                case "Confirmed":
+                                                    statusText = "Đã xác nhận";
+                                                    statusIcon = "check-circle";
+                                                    break;
+                                                case "CheckedIn":
+                                                    statusText = "Đã nhận phòng";
+                                                    statusIcon = "door-open";
+                                                    statusClass = "checkedin";
+                                                    break;
+                                                case "CheckedOut":
+                                                    statusText = "Đã trả phòng";
+                                                    statusIcon = "door-closed";
+                                                    statusClass = "checkedout";
+                                                    break;
+                                                case "Cancelled":
+                                                    statusText = "Đã hủy";
+                                                    statusIcon = "times-circle";
+                                                    break;
+                                            }
+                                        }
+                                        <span class="status-badge status-@statusClass">
+                                            <i class="fas fa-@statusIcon"></i>
+                                            @statusText
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="date-text">@booking.CreatedAt.ToString("dd/MM/yyyy")</span>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-action" type="button" data-bs-toggle="dropdown">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li class="dropdown-header">
+                                                    <i class="fas fa-tasks"></i> Cập nhật trạng thái
+                                                </li>
+                                                <li>
+                                                    <form method="post" asp-action="UpdateBookingStatus" class="dropdown-form">
+                                                        <input type="hidden" name="id" value="@booking.Id" />
+                                                        <input type="hidden" name="status" value="Confirmed" />
+                                                        <button type="submit" class="dropdown-item">
+                                                            <i class="fas fa-check-circle text-info"></i>
+                                                            <span>Xác nhận</span>
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                                <li>
+                                                    <form method="post" asp-action="UpdateBookingStatus" class="dropdown-form">
+                                                        <input type="hidden" name="id" value="@booking.Id" />
+                                                        <input type="hidden" name="status" value="CheckedIn" />
+                                                        <button type="submit" class="dropdown-item">
+                                                            <i class="fas fa-door-open text-success"></i>
+                                                            <span>Nhận phòng</span>
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                                <li>
+                                                    <form method="post" asp-action="UpdateBookingStatus" class="dropdown-form">
+                                                        <input type="hidden" name="id" value="@booking.Id" />
+                                                        <input type="hidden" name="status" value="CheckedOut" />
+                                                        <button type="submit" class="dropdown-item">
+                                                            <i class="fas fa-door-closed text-secondary"></i>
+                                                            <span>Trả phòng</span>
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li>
+                                                    <form method="post" asp-action="UpdateBookingStatus" class="dropdown-form"
+                                                          onsubmit="return confirm('Bạn có chắc muốn hủy đặt phòng này?');">
+                                                        <input type="hidden" name="id" value="@booking.Id" />
+                                                        <input type="hidden" name="status" value="Cancelled" />
+                                                        <button type="submit" class="dropdown-item text-danger">
+                                                            <i class="fas fa-times-circle"></i>
+                                                            <span>Hủy đặt phòng</span>
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            @if (!Model.Any())
+                            {
+                                <tr>
+                                    <td colspan="9" class="text-center">
+                                        <div class="no-data">
+                                            <i class="fas fa-inbox"></i>
+                                            <p>Không có đặt phòng nào</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<style>
-    .bg-pending {
-        background-color: #ffc107 !important;
-        color: #212529;
-    }
-
-    .bg-confirmed {
-        background-color: #17a2b8 !important;
-    }
-
-    .bg-checked-in {
-        background-color: #28a745 !important;
-    }
-
-    .bg-checked-out {
-        background-color: #6c757d !important;
-    }
-
-    .bg-cancelled {
-        background-color: #dc3545 !important;
-    }
-</style>
+@section Scripts {
+    <script src="~/js/admin-bookings.js"></script>
+}
