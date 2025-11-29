@@ -1,0 +1,108 @@
+﻿@model QuanLyKhachSan.ViewModels.Booking.BookingViewModel
+
+@{
+    ViewData["Title"] = "Book Room";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Book Room: @Model.RoomName</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <input type="hidden" asp-for="RoomId" />
+                        <input type="hidden" asp-for="RoomName" />
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="CheckInDateInput" class="form-label"></label>
+                                    <input asp-for="CheckInDateInput" class="form-control" type="date" />
+                                    <span asp-validation-for="CheckInDateInput" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="CheckOutDateInput" class="form-label"></label>
+                                    <input asp-for="CheckOutDateInput" class="form-control" type="date" />
+                                    <span asp-validation-for="CheckOutDateInput" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="NumberOfGuests" class="form-label"></label>
+                            <input asp-for="NumberOfGuests" class="form-control" min="1" max="10" />
+                            <span asp-validation-for="NumberOfGuests" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="SpecialRequests" class="form-label"></label>
+                            <textarea asp-for="SpecialRequests" class="form-control" rows="4" placeholder="Any special requests?"></textarea>
+                            <span asp-validation-for="SpecialRequests" class="text-danger"></span>
+                        </div>
+
+                        <!-- Booking Summary -->
+                        <div class="booking-summary mb-4 p-3 bg-light rounded">
+                            <h5>Booking Summary</h5>
+                            <div class="row">
+                                <div class="col-6">
+                                    <p><strong>Room:</strong> @Model.RoomName</p>
+                                    <p><strong>Check-in:</strong> <span id="checkInDisplay">@Model.CheckInDateInput.ToString("MMM dd, yyyy")</span></p>
+                                    <p><strong>Check-out:</strong> <span id="checkOutDisplay">@Model.CheckOutDateInput.ToString("MMM dd, yyyy")</span></p>
+                                </div>
+                                <div class="col-6">
+                                    <p><strong>Nights:</strong> <span id="nightsCount">1</span></p>
+                                    <p><strong>Guests:</strong> <span id="guestsCount">@Model.NumberOfGuests</span></p>
+                                    <p><strong>Total:</strong> $<span id="totalPrice">0.00</span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Confirm Booking</button>
+                            <a href="@Url.Action("Details", "Rooms", new { id = Model.RoomId })" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function calculateTotal() {
+            const checkIn = new Date(document.getElementById('CheckInDateInput').value);
+            const checkOut = new Date(document.getElementById('CheckOutDateInput').value);
+            const guests = parseInt(document.getElementById('NumberOfGuests').value) || 1;
+
+            if (checkIn && checkOut && checkOut > checkIn) {
+                const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+                const pricePerNight = 199.99; // This should come from the server
+                const totalPrice = nights * pricePerNight;
+
+                document.getElementById('nightsCount').textContent = nights;
+                document.getElementById('guestsCount').textContent = guests;
+                document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
+                document.getElementById('checkInDisplay').textContent = checkIn.toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'short', day: 'numeric'
+                });
+                document.getElementById('checkOutDisplay').textContent = checkOut.toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'short', day: 'numeric'
+                });
+            }
+        }
+
+        // Add event listeners
+        document.getElementById('CheckInDateInput').addEventListener('change', calculateTotal);
+        document.getElementById('CheckOutDateInput').addEventListener('change', calculateTotal);
+        document.getElementById('NumberOfGuests').addEventListener('change', calculateTotal);
+
+        // Initial calculation
+        calculateTotal();
+    </script>
+}

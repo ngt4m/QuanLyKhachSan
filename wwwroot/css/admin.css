@@ -1,0 +1,131 @@
+﻿/* Admin Layout Styles */
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 48px 0 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+.sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - 48px);
+    padding-top: .5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: #333;
+    padding: 0.75rem 1rem;
+}
+
+    .sidebar .nav-link.active {
+        color: #007bff;
+    }
+
+    .sidebar .nav-link:hover {
+        color: #007bff;
+    }
+
+.sidebar-heading {
+    font-size: .75rem;
+    text-transform: uppercase;
+}
+
+/* Main content */
+.main-content {
+    margin-left: 240px;
+    padding: 20px;
+}
+
+/* Statistics Cards */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Tables */
+.table th {
+    border-top: none;
+    font-weight: 600;
+    color: #6c757d;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* Badges */
+.badge {
+    font-size: 0.75em;
+    padding: 0.35em 0.65em;
+}
+
+    .badge.pending {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .badge.confirmed {
+        background-color: #17a2b8;
+        color: #fff;
+    }
+
+    .badge.checkedin {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .badge.checkedout {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .badge.cancelled {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+/* Forms */
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        position: static;
+        height: auto;
+        padding-top: 0;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .sidebar-sticky {
+        height: auto;
+    }
+}

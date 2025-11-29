@@ -1,0 +1,158 @@
+﻿@model QuanLyKhachSan.ViewModels.Payment.InvoiceViewModel
+
+@{
+    ViewData["Title"] = "Payment Invoice";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Invoice Header -->
+            <div class="card border-success">
+                <div class="card-header bg-success text-white text-center">
+                    <h3 class="mb-0"><i class="fas fa-check-circle me-2"></i>PAYMENT SUCCESSFUL</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Success Message -->
+                    <div class="text-center mb-4">
+                        <i class="fas fa-check-circle fa-5x text-success mb-3"></i>
+                        <h4>Thank You for Your Payment!</h4>
+                        <p class="text-muted">Your payment has been processed successfully.</p>
+                    </div>
+
+                    <!-- Invoice Details -->
+                    <div class="invoice-details border rounded p-4 mb-4">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <h5 class="text-primary">LUXURY HOTEL</h5>
+                                <p class="mb-1">123 Hotel Street, District 1</p>
+                                <p class="mb-1">Ho Chi Minh City, Vietnam</p>
+                                <p class="mb-0">Phone: +84 28 3823 4567</p>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <h5 class="text-primary">INVOICE</h5>
+                                <p class="mb-1"><strong>Invoice #:</strong> @Model.TransactionId</p>
+                                <p class="mb-1"><strong>Date:</strong> @Model.PaymentDate.ToString("MMM dd, yyyy HH:mm")</p>
+                                <p class="mb-0"><strong>Status:</strong> <span class="badge bg-success">PAID</span></p>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- Customer Information -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <h6>Bill To:</h6>
+                                <p class="mb-1"><strong>@Model.CustomerName</strong></p>
+                                <p class="mb-1">@Model.CustomerEmail</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Payment Method:</h6>
+                                <p class="mb-1"><strong>@Model.PaymentMethod</strong></p>
+                                <p class="mb-0">Transaction ID: @Model.TransactionId</p>
+                            </div>
+                        </div>
+
+                        <!-- Booking Details -->
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Check-in</th>
+                                        <th>Check-out</th>
+                                        <th>Guests</th>
+                                        <th class="text-end">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>@Model.RoomName</strong><br>
+                                            <small class="text-muted">Booking ID: #@Model.BookingId</small>
+                                        </td>
+                                        <td>@Model.CheckInDate.ToString("MMM dd, yyyy")</td>
+                                        <td>@Model.CheckOutDate.ToString("MMM dd, yyyy")</td>
+                                        <td>@Model.NumberOfGuests</td>
+                                        <td class="text-end">$@Model.Amount.ToString("N2")</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4" class="text-end"><strong>Total Amount:</strong></td>
+                                        <td class="text-end"><strong class="h5 text-success">$@Model.Amount.ToString("N2")</strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Payment Confirmation -->
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-info-circle me-2"></i>Payment Confirmation</h6>
+                        <p class="mb-2">Your payment of <strong>$@Model.Amount.ToString("N2")</strong> has been successfully processed.</p>
+                        <p class="mb-0">Transaction ID: <strong>@Model.TransactionId</strong></p>
+                    </div>
+
+                    <!-- Next Steps -->
+                    <div class="border rounded p-3 bg-light">
+                        <h6>What's Next?</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-envelope text-primary me-2"></i> Invoice sent to your email</li>
+                                    <li><i class="fas fa-calendar-check text-primary me-2"></i> Booking confirmed</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-door-open text-primary me-2"></i> Check-in from 2:00 PM</li>
+                                    <li><i class="fas fa-phone text-primary me-2"></i> Contact: +84 28 3823 4567</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                        <button onclick="window.print()" class="btn btn-outline-primary me-md-2">
+                            <i class="fas fa-print me-2"></i>Print Invoice
+                        </button>
+                        <a href="@Url.Action("Details", "Bookings", new { id = Model.BookingId })" class="btn btn-primary me-md-2">
+                            <i class="fas fa-eye me-2"></i>View Booking
+                        </a>
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-success">
+                            <i class="fas fa-home me-2"></i>Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .invoice-details {
+        background-color: #f8f9fa;
+        border-left: 4px solid #28a745 !important;
+    }
+
+    .table th {
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    @@media print {
+        .btn {
+            display: none !important;
+        }
+
+        .container {
+            max-width: 100% !important;
+        }
+
+        .card {
+            border: none !important;
+            box-shadow: none !important;
+        }
+    }
+</style>

@@ -5,52 +5,43 @@ namespace QuanLyKhachSan.Models
 {
     public class Booking
     {
+        [Key]
         public int Id { get; set; }
 
         [Required]
-        public string UserId { get; set; } = string.Empty;
+        public string UserId { get; set; }
 
         [Required]
         public int RoomId { get; set; }
 
-        [Required(ErrorMessage = "Ngày nhận phòng là bắt buộc")]
-        [Display(Name = "Ngày nhận phòng")]
-        [DataType(DataType.Date)]
+        [Required]
         public DateTime CheckInDate { get; set; }
 
-        [Required(ErrorMessage = "Ngày trả phòng là bắt buộc")]
-        [Display(Name = "Ngày trả phòng")]
-        [DataType(DataType.Date)]
+        [Required]
         public DateTime CheckOutDate { get; set; }
 
-        [Display(Name = "Số khách")]
-        [Range(1, 10, ErrorMessage = "Số khách phải từ 1 đến 10")]
-        public int NumberOfGuests { get; set; } = 1;
+        [Required]
+        public int NumberOfGuests { get; set; }
 
-        [Display(Name = "Tổng tiền")]
+        [Required]
         [Column(TypeName = "decimal(18,2)")]
-        public decimal TotalAmount { get; set; }
+        public decimal TotalPrice { get; set; }
 
-        [Display(Name = "Ghi chú đặc biệt")]
-        public string? SpecialRequests { get; set; }
-
-        [Display(Name = "Trạng thái")]
+        [Required]
         public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
-        [Display(Name = "Ngày đặt")]
-        public DateTime BookingDate { get; set; } = DateTime.UtcNow;
+        public string SpecialRequests { get; set; }
 
-        public virtual ApplicationUser User { get; set; } = null!;
-        public virtual Room Room { get; set; } = null!;
-        public virtual Payment? Payment { get; set; }
-    }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-    public enum BookingStatus
-    {
-        Pending,
-        Confirmed,
-        CheckedIn,
-        CheckedOut,
-        Cancelled
+        // Navigation properties
+        [ForeignKey("UserId")]
+        public virtual ApplicationUser User { get; set; }
+
+        [ForeignKey("RoomId")]
+        public virtual Room Room { get; set; }
+
+        public virtual ICollection<Payment> Payments { get; set; }
     }
 }

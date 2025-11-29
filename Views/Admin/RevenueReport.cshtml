@@ -1,0 +1,196 @@
+﻿@model QuanLyKhachSan.ViewModels.Admin.RevenueReportViewModel
+@{
+    ViewData["Title"] = "Revenue Report";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Revenue Report</h1>
+
+    <!-- Filter Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Report Filters</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" name="startDate" class="form-control" value="@Model.StartDate.ToString("yyyy-MM-dd")">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">End Date</label>
+                    <input type="date" name="endDate" class="form-control" value="@Model.EndDate.ToString("yyyy-MM-dd")">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary w-100">Generate Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Revenue</div>
+                            <div class="h5 mb-0">$@Model.TotalRevenue.ToString("N2")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-success text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Bookings</div>
+                            <div class="h5 mb-0">@Model.TotalBookings</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-info text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Confirmed</div>
+                            <div class="h5 mb-0">@Model.ConfirmedBookings</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-warning text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Checked Out</div>
+                            <div class="h5 mb-0">@Model.CheckedOutBookings</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-door-open fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Revenue by Room Type -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Revenue by Room Type</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Room Type</th>
+                                    <th>Revenue</th>
+                                    <th>Bookings</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.RevenueByRoomTypes)
+                                {
+                                    <tr>
+                                        <td>@item.RoomType</td>
+                                        <td>$@item.Revenue.ToString("N2")</td>
+                                        <td>@item.BookingCount</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Revenue -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Daily Revenue</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Revenue</th>
+                                    <th>Bookings</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.DailyRevenues)
+                                {
+                                    <tr>
+                                        <td>@item.Date.ToString("MMM dd, yyyy")</td>
+                                        <td>$@item.Revenue.ToString("N2")</td>
+                                        <td>@item.BookingCount</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Revenue -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Monthly Revenue Trend</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Revenue</th>
+                                    <th>Bookings</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.MonthlyRevenues)
+                                {
+                                    <tr>
+                                        <td>@item.Month</td>
+                                        <td>$@item.Revenue.ToString("N2")</td>
+                                        <td>@item.BookingCount</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

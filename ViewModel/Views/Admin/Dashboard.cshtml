@@ -1,0 +1,159 @@
+﻿@model QuanLyKhachSan.ViewModels.Admin.DashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Dashboard</h1>
+
+    <!-- Statistics Cards -->
+    <div class="row mt-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Bookings</div>
+                            <div class="h5 mb-0">@Model.TotalBookings</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-success text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Users</div>
+                            <div class="h5 mb-0">@Model.TotalUsers</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-warning text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Rooms</div>
+                            <div class="h5 mb-0">@Model.TotalRooms</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-bed fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-danger text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Revenue</div>
+                            <div class="h5 mb-0">$@Model.TotalRevenue.ToString("N2")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Revenue -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Monthly Revenue</div>
+                            <div class="h5 mb-0">$@Model.MonthlyRevenue.ToString("N2")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-secondary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Quick Reports</div>
+                            <div class="h6 mb-0">
+                                <a href="@Url.Action("RevenueReport", "Admin")" class="text-white">Revenue Report</a> |
+                                <a href="@Url.Action("BookingReport", "Admin")" class="text-white">Booking Report</a>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-chart-bar fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Bookings -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Recent Bookings
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Room</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var booking in Model.RecentBookings)
+                        {
+                            <tr>
+                                <td>@booking.Id</td>
+                                <td>@booking.UserName</td>
+                                <td>@booking.RoomName</td>
+                                <td>@booking.CheckInDate.ToString("MMM dd, yyyy")</td>
+                                <td>@booking.CheckOutDate.ToString("MMM dd, yyyy")</td>
+                                <td>$@booking.TotalPrice.ToString("N2")</td>
+                                <td>
+                                    @{
+                                        var statusClass = booking.Status.ToString().ToLower();
+                                        statusClass = statusClass == "checkedin" ? "checked-in" : statusClass;
+                                        statusClass = statusClass == "checkedout" ? "checked-out" : statusClass;
+                                    }
+                                    <span class="badge bg-@statusClass">@booking.Status</span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

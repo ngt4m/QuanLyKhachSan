@@ -1,0 +1,129 @@
+﻿@model List<QuanLyKhachSan.ViewModels.Booking.BookingViewModel>
+@{
+    ViewData["Title"] = "Manage Bookings";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Manage Bookings</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-calendar me-1"></i>
+            Bookings List
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Room</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var booking in Model)
+                        {
+                            <tr>
+                                <td>@booking.Id</td>
+                                <td>@booking.UserName</td>
+                                <td>@booking.RoomName</td>
+                                <td>@booking.CheckInDate.ToString("MMM dd, yyyy")</td>
+                                <td>@booking.CheckOutDate.ToString("MMM dd, yyyy")</td>
+                                <td>$@booking.TotalPrice.ToString("N2")</td>
+                                <td>
+                                    @{
+                                        var statusClass = booking.Status.ToString().ToLower();
+                                        statusClass = statusClass == "checkedin" ? "checked-in" : statusClass;
+                                        statusClass = statusClass == "checkedout" ? "checked-out" : statusClass;
+                                    }
+                                    <span class="badge bg-@statusClass">@booking.Status</span>
+                                </td>
+                                <td>@booking.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            Actions
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <form method="post" asp-action="UpdateBookingStatus" class="d-inline">
+                                                    <input type="hidden" name="id" value="@booking.Id" />
+                                                    <input type="hidden" name="status" value="Confirmed" />
+                                                    <button type="submit" class="dropdown-item">Confirm</button>
+                                                </form>
+                                            </li>
+                                            <li>
+                                                <form method="post" asp-action="UpdateBookingStatus" class="d-inline">
+                                                    <input type="hidden" name="id" value="@booking.Id" />
+                                                    <input type="hidden" name="status" value="CheckedIn" />
+                                                    <button type="submit" class="dropdown-item">Check In</button>
+                                                </form>
+                                            </li>
+                                            <li>
+                                                <form method="post" asp-action="UpdateBookingStatus" class="d-inline">
+                                                    <input type="hidden" name="id" value="@booking.Id" />
+                                                    <input type="hidden" name="status" value="CheckedOut" />
+                                                    <button type="submit" class="dropdown-item">Check Out</button>
+                                                </form>
+                                            </li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <form method="post" asp-action="UpdateBookingStatus" class="d-inline">
+                                                    <input type="hidden" name="id" value="@booking.Id" />
+                                                    <input type="hidden" name="status" value="Cancelled" />
+                                                    <button type="submit" class="dropdown-item text-danger">Cancel</button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="9" class="text-center">No bookings found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-pending {
+        background-color: #ffc107 !important;
+        color: #212529;
+    }
+
+    .bg-confirmed {
+        background-color: #17a2b8 !important;
+    }
+
+    .bg-checked-in {
+        background-color: #28a745 !important;
+    }
+
+    .bg-checked-out {
+        background-color: #6c757d !important;
+    }
+
+    .bg-cancelled {
+        background-color: #dc3545 !important;
+    }
+</style>

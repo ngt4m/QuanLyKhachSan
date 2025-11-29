@@ -1,0 +1,108 @@
+﻿@model List<QuanLyKhachSan.ViewModels.Booking.BookingListViewModel>
+
+@{
+    ViewData["Title"] = "My Bookings";
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4">My Bookings</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var booking in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card booking-card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">@booking.RoomName</h5>
+                            <span class="badge bg-@booking.Status.ToString().ToLower()">@booking.Status</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <p><strong>Check-in:</strong><br>@booking.CheckInDate.ToString("MMM dd, yyyy")</p>
+                                    <p><strong>Check-out:</strong><br>@booking.CheckOutDate.ToString("MMM dd, yyyy")</p>
+                                </div>
+                                <div class="col-6">
+                                    <p><strong>Total:</strong><br>$@booking.TotalPrice.ToString("N2")</p>
+                                    <p><strong>Booked on:</strong><br>@booking.CreatedAt.ToString("MMM dd, yyyy")</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-grid gap-2">
+                                <a href="@Url.Action("Details", "Bookings", new { id = booking.Id })" class="btn btn-outline-primary btn-sm">
+                                    View Details
+                                </a>
+                                @if (booking.Status == QuanLyKhachSan.Models.BookingStatus.Pending ||
+                                                        booking.Status == QuanLyKhachSan.Models.BookingStatus.Confirmed)
+                                {
+                                    <form method="post" asp-action="Cancel" asp-route-id="@booking.Id"
+                                          onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm w-100">
+                                            Cancel Booking
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center">
+            <div class="alert alert-info">
+                <h4>No bookings found</h4>
+                <p>You haven't made any bookings yet.</p>
+                <a href="@Url.Action("Rooms", "Home")" class="btn btn-primary">Browse Rooms</a>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .booking-card {
+        transition: transform 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+        .booking-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+    .bg-pending {
+        background-color: #ffc107 !important;
+        color: #212529;
+    }
+
+    .bg-confirmed {
+        background-color: #17a2b8 !important;
+    }
+
+    .bg-checkedin {
+        background-color: #28a745 !important;
+    }
+
+    .bg-checkedout {
+        background-color: #6c757d !important;
+    }
+
+    .bg-cancelled {
+        background-color: #dc3545 !important;
+    }
+</style>

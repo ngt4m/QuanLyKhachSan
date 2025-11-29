@@ -5,30 +5,31 @@ namespace QuanLyKhachSan.Models
 {
     public class Payment
     {
+        [Key]
         public int Id { get; set; }
 
         [Required]
         public int BookingId { get; set; }
 
-        [Required(ErrorMessage = "Số tiền là bắt buộc")]
-        [Range(0, double.MaxValue, ErrorMessage = "Số tiền phải lớn hơn 0")]
-        [Display(Name = "Số tiền")]
+        [Required]
         [Column(TypeName = "decimal(18,2)")]
         public decimal Amount { get; set; }
 
-        [Required(ErrorMessage = "Phương thức thanh toán là bắt buộc")]
-        [Display(Name = "Phương thức thanh toán")]
-        public PaymentMethod PaymentMethod { get; set; } = PaymentMethod.PayAtHotel;
-
-        [Display(Name = "Trạng thái thanh toán")]
+        [Required]
         public PaymentStatus Status { get; set; } = PaymentStatus.Pending;
 
-        [Display(Name = "Ngày thanh toán")]
-        public DateTime PaymentDate { get; set; } = DateTime.UtcNow;
+        [Required]
+        [StringLength(50)]
+        public string PaymentMethod { get; set; } = string.Empty;
 
-        [Display(Name = "Mã giao dịch")]
+        [StringLength(100)]
         public string? TransactionId { get; set; }
 
+        public DateTime PaymentDate { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        // Navigation properties
+        [ForeignKey("BookingId")]
         public virtual Booking Booking { get; set; } = null!;
     }
 
@@ -37,12 +38,6 @@ namespace QuanLyKhachSan.Models
         Pending,
         Completed,
         Failed,
-        Refunded
-    }
-
-    public enum PaymentMethod
-    {
-        PayAtHotel,   // Thanh toán tại khách sạn
-        Card          // Thanh toán bằng thẻ (online/offline)
+        Refunded  // THÊM STATUS HOÀN TIỀN
     }
 }

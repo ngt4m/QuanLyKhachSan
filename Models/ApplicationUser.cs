@@ -6,23 +6,20 @@ namespace QuanLyKhachSan.Models
     public class ApplicationUser : IdentityUser
     {
         [Required]
-        [Display(Name = "Họ và tên")]
         [StringLength(100)]
-        public string FullName { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
 
-        [Display(Name = "Địa chỉ")]
+        [Required]
+        [StringLength(100)]
+        public string LastName { get; set; } = string.Empty;
+
+        [Required]
+        public DateTime DateOfBirth { get; set; }
+
         [StringLength(200)]
         public string? Address { get; set; }
 
-        [Display(Name = "CMND/CCCD")]
-        [StringLength(20)]
-        public string? IdentityNumber { get; set; }
-
-        [Display(Name = "Ngày tạo")]
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-
-        [Display(Name = "Ngày cập nhật")]
-        public DateTime UpdatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation properties
         public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();

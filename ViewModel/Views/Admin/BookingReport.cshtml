@@ -1,0 +1,209 @@
+﻿@model QuanLyKhachSan.ViewModels.Admin.BookingReportViewModel
+@{
+    ViewData["Title"] = "Booking Report";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Booking Report</h1>
+
+    <!-- Filter Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Report Filters</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" name="startDate" class="form-control" value="@Model.StartDate.ToString("yyyy-MM-dd")">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">End Date</label>
+                    <input type="date" name="endDate" class="form-control" value="@Model.EndDate.ToString("yyyy-MM-dd")">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary w-100">Generate Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-2 col-md-4">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body text-center">
+                    <div class="h5 mb-0">@Model.TotalBookings</div>
+                    <div class="small">Total Bookings</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-2 col-md-4">
+            <div class="card bg-warning text-white mb-4">
+                <div class="card-body text-center">
+                    <div class="h5 mb-0">@Model.PendingBookings</div>
+                    <div class="small">Pending</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-2 col-md-4">
+            <div class="card bg-info text-white mb-4">
+                <div class="card-body text-center">
+                    <div class="h5 mb-0">@Model.ConfirmedBookings</div>
+                    <div class="small">Confirmed</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-2 col-md-4">
+            <div class="card bg-success text-white mb-4">
+                <div class="card-body text-center">
+                    <div class="h5 mb-0">@Model.CheckedInBookings</div>
+                    <div class="small">Checked In</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-2 col-md-4">
+            <div class="card bg-secondary text-white mb-4">
+                <div class="card-body text-center">
+                    <div class="h5 mb-0">@Model.CheckedOutBookings</div>
+                    <div class="small">Checked Out</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-2 col-md-4">
+            <div class="card bg-danger text-white mb-4">
+                <div class="card-body text-center">
+                    <div class="h5 mb-0">@Model.CancelledBookings</div>
+                    <div class="small">Cancelled</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Status Distribution -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Booking Status Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Count</th>
+                                    <th>Percentage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.StatusCounts)
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="badge bg-@item.StatusName.ToLower()">@item.StatusName</span>
+                                        </td>
+                                        <td>@item.Count</td>
+                                        <td>@item.Percentage.ToString("N1")%</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Popular Rooms -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Most Popular Rooms</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Room</th>
+                                    <th>Type</th>
+                                    <th>Bookings</th>
+                                    <th>Revenue</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.PopularRooms)
+                                {
+                                    <tr>
+                                        <td>@item.RoomName</td>
+                                        <td>@item.RoomType</td>
+                                        <td>@item.BookingCount</td>
+                                        <td>$@item.TotalRevenue.ToString("N2")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Trends -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Booking Trends (Last 12 Months)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Bookings</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.BookingTrends)
+                                {
+                                    <tr>
+                                        <td>@item.Period</td>
+                                        <td>@item.BookingCount</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-pending {
+        background-color: #ffc107 !important;
+        color: #212529;
+    }
+
+    .bg-confirmed {
+        background-color: #17a2b8 !important;
+    }
+
+    .bg-checkedin {
+        background-color: #28a745 !important;
+    }
+
+    .bg-checkedout {
+        background-color: #6c757d !important;
+    }
+
+    .bg-cancelled {
+        background-color: #dc3545 !important;
+    }
+</style>

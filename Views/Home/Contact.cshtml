@@ -1,0 +1,213 @@
+﻿@{
+    ViewData["Title"] = "Liên Hệ";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/contact.css" />
+}
+
+<div class="contact-page">
+    <!-- Header Banner -->
+    <div class="page-header">
+        <div class="container">
+            <h1 class="page-title">Liên Hệ Với Chúng Tôi</h1>
+            <p class="page-subtitle">Chúng tôi luôn sẵn sàng hỗ trợ bạn 24/7</p>
+        </div>
+    </div>
+
+    <div class="container mt-5 mb-5">
+        <div class="row">
+            <!-- Contact Information -->
+            <div class="col-lg-5 mb-4">
+                <div class="info-card">
+                    <div class="info-header">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <h3>Thông Tin Liên Hệ</h3>
+                    </div>
+                    <div class="info-body">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-details">
+                                <strong>Địa Chỉ</strong>
+                                <p>123 Đường Khách Sạn, Quận 1<br>Thành phố Hồ Chí Minh, Việt Nam</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-details">
+                                <strong>Điện Thoại</strong>
+                                <p><a href="tel:+842838234567">+84 28 3823 4567</a></p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-details">
+                                <strong>Email</strong>
+                                <p><a href="mailto:info@luxuryhotel.com">info@luxuryhotel.com</a></p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="contact-details">
+                                <strong>Giờ Làm Việc</strong>
+                                <p>Lễ tân phục vụ 24/7</p>
+                            </div>
+                        </div>
+
+                        <!-- Social Media -->
+                        <div class="social-section">
+                            <strong class="social-title">Kết Nối Với Chúng Tôi</strong>
+                            <div class="social-links">
+                                <a href="#" class="social-link facebook">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="social-link instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="social-link twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="social-link youtube">
+                                    <i class="fab fa-youtube"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="col-lg-7 mb-4">
+                <div class="form-card">
+                    <div class="form-header">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-paper-plane"></i>
+                        </div>
+                        <h3>Gửi Tin Nhắn Cho Chúng Tôi</h3>
+                        <p>Điền thông tin bên dưới và chúng tôi sẽ phản hồi trong thời gian sớm nhất</p>
+                    </div>
+                    <div class="form-body">
+                        <form id="contactForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label">
+                                        <i class="fas fa-user"></i> Họ và Tên
+                                    </label>
+                                    <input type="text" class="form-control" id="name" placeholder="Nguyễn Văn A" required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">
+                                        <i class="fas fa-envelope"></i> Email
+                                    </label>
+                                    <input type="email" class="form-control" id="email" placeholder="example@email.com" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="phone" class="form-label">
+                                        <i class="fas fa-phone"></i> Số Điện Thoại
+                                    </label>
+                                    <input type="tel" class="form-control" id="phone" placeholder="0901234567">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="subject" class="form-label">
+                                        <i class="fas fa-tag"></i> Chủ Đề
+                                    </label>
+                                    <select class="form-control" id="subject" required>
+                                        <option value="">Chọn chủ đề</option>
+                                        <option value="reservation">Đặt phòng</option>
+                                        <option value="service">Hỏi về dịch vụ</option>
+                                        <option value="complaint">Khiếu nại</option>
+                                        <option value="feedback">Góp ý</option>
+                                        <option value="other">Khác</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="message" class="form-label">
+                                    <i class="fas fa-comment-dots"></i> Nội Dung Tin Nhắn
+                                </label>
+                                <textarea class="form-control" id="message" rows="6" placeholder="Nhập nội dung tin nhắn của bạn..." required></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-submit">
+                                <i class="fas fa-paper-plane"></i>
+                                <span>Gửi Tin Nhắn</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="map-card">
+                    <div class="map-header">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <h3>Vị Trí Của Chúng Tôi</h3>
+                    </div>
+                    <div class="map-body">
+                        <div class="map-container">
+                            <div class="map-placeholder">
+                                <div class="map-icon">
+                                    <i class="fas fa-map-marked-alt"></i>
+                                </div>
+                                <h4>Bản Đồ Tương Tác</h4>
+                                <p>123 Đường Khách Sạn, Quận 1</p>
+                                <p>Thành phố Hồ Chí Minh, Việt Nam</p>
+                                <a href="https://maps.google.com" target="_blank" class="btn btn-map">
+                                    <i class="fas fa-directions"></i> Xem Trên Google Maps
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Contact Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="quick-contact">
+                    <div class="quick-contact-content">
+                        <div class="quick-contact-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <div class="quick-contact-text">
+                            <h4>Cần Hỗ Trợ Ngay?</h4>
+                            <p>Gọi đường dây nóng 24/7 của chúng tôi để được hỗ trợ tức thì</p>
+                        </div>
+                        <a href="tel:+842838234567" class="btn btn-call">
+                            <i class="fas fa-phone-alt"></i> +84 28 3823 4567
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/contact.js"></script>
+}

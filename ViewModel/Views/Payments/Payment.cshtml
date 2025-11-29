@@ -1,0 +1,113 @@
+﻿@model QuanLyKhachSan.ViewModels.Payment.PaymentViewModel
+
+@{
+    ViewData["Title"] = "Payment";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">Payment</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Booking Summary</h5>
+                            <div class="border p-3 rounded">
+                                <p><strong>Booking ID:</strong> #@Model.BookingId</p>
+                                <p><strong>Room:</strong> @Model.RoomName</p>
+                                <p><strong>Check-in:</strong> @Model.CheckInDate.ToString("MMM dd, yyyy")</p>
+                                <p><strong>Check-out:</strong> @Model.CheckOutDate.ToString("MMM dd, yyyy")</p>
+                                <p><strong>Guests:</strong> @Model.NumberOfGuests</p>
+                                <hr>
+                                <h5 class="text-success">Total: $@Model.TotalPrice.ToString("N2")</h5>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Payment Method</h5>
+                            <form method="post" asp-controller="Payments" asp-action="ProcessPayment">
+                                <input type="hidden" name="bookingId" value="@Model.BookingId" />
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="paymentMethod"
+                                           id="creditCard" value="Credit Card" checked>
+                                    <label class="form-check-label" for="creditCard">
+                                        <i class="fas fa-credit-card me-2"></i>Credit Card
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="paymentMethod"
+                                           id="paypal" value="PayPal">
+                                    <label class="form-check-label" for="paypal">
+                                        <i class="fab fa-paypal me-2"></i>PayPal
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="paymentMethod"
+                                           id="bankTransfer" value="Bank Transfer">
+                                    <label class="form-check-label" for="bankTransfer">
+                                        <i class="fas fa-university me-2"></i>Bank Transfer
+                                    </label>
+                                </div>
+
+                                <!-- Credit Card Form (shown when credit card is selected) -->
+                                <div id="creditCardForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">Card Number</label>
+                                        <input type="text" class="form-control" placeholder="1234 5678 9012 3456" required>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Expiry Date</label>
+                                                <input type="text" class="form-control" placeholder="MM/YY" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">CVV</label>
+                                                <input type="text" class="form-control" placeholder="123" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Card Holder Name</label>
+                                        <input type="text" class="form-control" placeholder="John Doe" required>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-success btn-lg w-100 mt-3">
+                                    <i class="fas fa-lock me-2"></i>Pay Now
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <a href="@Url.Action("Details", "Bookings", new { id = Model.BookingId })"
+                   class="btn btn-outline-secondary">Cancel Payment</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Show/hide credit card form based on payment method selection
+        document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const creditCardForm = document.getElementById('creditCardForm');
+                creditCardForm.style.display = this.value === 'Credit Card' ? 'block' : 'none';
+            });
+        });
+
+        // Initial state
+        document.getElementById('creditCardForm').style.display = 'block';
+    </script>
+}
