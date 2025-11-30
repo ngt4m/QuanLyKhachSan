@@ -1,99 +1,178 @@
 ﻿@model QuanLyKhachSan.ViewModels.Admin.RoomCreateViewModel
 
 @{
-    ViewData["Title"] = "Edit Room";
+    ViewData["Title"] = "Chỉnh Sửa Phòng";
     Layout = "_AdminLayout";
 }
 
-<div class="container-fluid">
-    <h1 class="mt-4">Edit Room</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-edit.css" />
+}
 
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5 class="mb-0">Edit Room Information</h5>
+<div class="container-fluid px-4">
+    <div class="page-header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="page-title">
+                    <i class="fas fa-edit"></i>
+                    Chỉnh Sửa Phòng
+                </h1>
+                <p class="page-subtitle">Cập nhật thông tin phòng #@Model.Id</p>
+            </div>
         </div>
-        <div class="card-body">
-            <form method="post">
+    </div>
+
+    <div class="card modern-card mb-4">
+        <div class="card-header-custom">
+            <h5><i class="fas fa-bed me-2"></i>Thông Tin Phòng</h5>
+        </div>
+        <div class="card-body p-4">
+            <form method="post" enctype="multipart/form-data" id="roomForm">
                 <input type="hidden" asp-for="Id" />
 
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label asp-for="Name" class="form-label"></label>
-                            <input asp-for="Name" class="form-control" />
+                    <!-- Cột trái -->
+                    <div class="col-lg-6">
+                        <div class="form-group mb-4">
+                            <label asp-for="Name" class="form-label">
+                                <i class="fas fa-door-open me-2"></i>Tên Phòng
+                            </label>
+                            <input asp-for="Name" class="form-control" placeholder="VD: Phòng Suite Hướng Biển 101" />
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label asp-for="Type" class="form-label"></label>
+                        <div class="form-group mb-4">
+                            <label asp-for="Type" class="form-label">
+                                <i class="fas fa-tag me-2"></i>Loại Phòng
+                            </label>
                             <select asp-for="Type" class="form-control">
-                                <option value="">Select Room Type</option>
-                                <option value="Standard">Standard</option>
-                                <option value="Deluxe">Deluxe</option>
-                                <option value="Suite">Suite</option>
-                                <option value="Family">Family</option>
-                                <option value="Executive">Executive</option>
-                                <option value="Presidential">Presidential</option>
+                                <option value="">Chọn loại phòng</option>
+                                <option value="Standard">🏠 Tiêu Chuẩn</option>
+                                <option value="Deluxe">✨ Cao Cấp</option>
+                                <option value="Suite">👑 Hạng Sang</option>
+                                <option value="Family">👨‍👩‍👧‍👦 Gia Đình</option>
+                                <option value="Executive">💼 Doanh Nhân</option>
+                                <option value="Presidential">🌟 Tổng Thống</option>
                             </select>
                             <span asp-validation-for="Type" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label asp-for="Price" class="form-label"></label>
-                            <input asp-for="Price" class="form-control" type="number" step="0.01" />
-                            <span asp-validation-for="Price" class="text-danger"></span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label asp-for="Price" class="form-label">
+                                        <i class="fas fa-dollar-sign me-2"></i>Giá Mỗi Đêm
+                                    </label>
+                                    <input asp-for="Price" class="form-control" type="number" step="0.01" placeholder="0.00" />
+                                    <span asp-validation-for="Price" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label asp-for="Capacity" class="form-label">
+                                        <i class="fas fa-users me-2"></i>Sức Chứa
+                                    </label>
+                                    <input asp-for="Capacity" class="form-control" type="number" min="1" max="10" placeholder="Số lượng khách" />
+                                    <span asp-validation-for="Capacity" class="text-danger"></span>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label asp-for="Capacity" class="form-label"></label>
-                            <input asp-for="Capacity" class="form-control" type="number" min="1" max="10" />
-                            <span asp-validation-for="Capacity" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label asp-for="Size" class="form-label">Size (sq ft)</label>
-                            <input asp-for="Size" class="form-control" type="number" min="1" />
+                        <div class="form-group mb-4">
+                            <label asp-for="Size" class="form-label">
+                                <i class="fas fa-ruler-combined me-2"></i>Diện Tích (m²)
+                            </label>
+                            <input asp-for="Size" class="form-control" type="number" min="1" placeholder="VD: 45" />
                             <span asp-validation-for="Size" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label asp-for="ImageUrl" class="form-label"></label>
-                            <input asp-for="ImageUrl" class="form-control" placeholder="https://example.com/image.jpg" />
-                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
-                        </div>
-
-                        <div class="form-group mb-3">
+                        <div class="form-group mb-4">
                             <div class="form-check">
-                                <input asp-for="IsAvailable" class="form-check-input" />
-                                <label asp-for="IsAvailable" class="form-check-label"></label>
+                                <input asp-for="IsAvailable" class="form-check-input" type="checkbox" style="width: 1.2em; height: 1.2em;" />
+                                <label asp-for="IsAvailable" class="form-check-label ms-2" style="margin-top: 2px;">
+                                    Đánh dấu phòng này là có sẵn để đặt
+                                </label>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Image Preview -->
-                        <div class="form-group mb-3">
-                            <label class="form-label">Image Preview</label>
-                            <div id="imagePreview" class="border p-2 text-center" style="min-height: 150px; display: @(!string.IsNullOrEmpty(Model.ImageUrl) ? "block" : "none");">
-                                <img id="previewImage" src="@Model.ImageUrl" alt="Preview" class="img-fluid" style="max-height: 140px;" />
+                    <!-- Cột phải -->
+                    <div class="col-lg-6">
+                        <div class="form-group mb-4">
+                            <label class="form-label">
+                                <i class="fas fa-image me-2"></i>Hình Ảnh Phòng
+                            </label>
+
+                            <input type="file" id="imageInput" name="ImageFile" accept="image/*" style="display: none;" />
+
+                            <!-- Hiển thị ảnh hiện tại hoặc upload area -->
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <div id="currentImageContainer" class="current-image-container">
+                                    <img id="currentImage" class="current-image" src="@Model.ImageUrl" alt="Ảnh Phòng Hiện Tại" />
+                                    <div class="image-overlay">
+                                        <button type="button" class="btn-change-image" id="changeImageBtn">
+                                            <i class="fas fa-camera me-2"></i>Thay Đổi Ảnh
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div id="uploadArea" class="upload-area">
+                                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                    <h5 class="mb-2">Tải Lên Hình Ảnh Phòng</h5>
+                                    <p class="text-muted mb-3">Nhấp để chọn hoặc kéo thả ảnh vào đây</p>
+                                    <span class="info-badge">JPG, PNG hoặc GIF (tối đa 5MB)</span>
+                                </div>
+                            }
+
+                            <div id="uploadArea" class="upload-area" style="display: @(string.IsNullOrEmpty(Model.ImageUrl) ? "block" : "none");">
+                                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                <h5 class="mb-2">Tải Lên Hình Ảnh Phòng</h5>
+                                <p class="text-muted mb-3">Nhấp để chọn hoặc kéo thả ảnh vào đây</p>
+                                <span class="info-badge">JPG, PNG hoặc GIF (tối đa 5MB)</span>
                             </div>
-                            <div id="noImage" class="border p-3 text-center text-muted" style="display: @(string.IsNullOrEmpty(Model.ImageUrl) ? "block" : "none");">
-                                <i class="fas fa-image fa-2x mb-2"></i>
-                                <p class="mb-0">No image preview available</p>
+
+                            <div id="newImagePreviewContainer" class="image-preview-container mt-3" style="display: none;">
+                                <img id="newPreviewImage" class="preview-image" src="#" alt="Xem Trước Ảnh Mới" />
+                                <button type="button" class="remove-image" id="removeNewImageBtn" title="Xóa ảnh mới">
+                                    <i class="fas fa-times"></i>
+                                </button>
                             </div>
+
+                            <input type="hidden" asp-for="ImageUrl" id="imageUrlHidden" />
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <small class="form-text text-muted mt-2 d-block">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Nếu không chọn ảnh mới, ảnh hiện tại sẽ được giữ nguyên
+                                </small>
+                            }
                         </div>
                     </div>
                 </div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="Description" class="form-label"></label>
-                    <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                <div class="section-divider"></div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="Description" class="form-label">
+                        <i class="fas fa-align-left me-2"></i>Mô Tả Phòng
+                    </label>
+                    <textarea asp-for="Description" class="form-control" rows="5"
+                              placeholder="Mô tả các tiện nghi, đặc điểm và những điểm độc đáo của phòng..."></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-primary">Update Room</button>
-                    <a href="@Url.Action("AdminRooms", "Admin")" class="btn btn-secondary">Cancel</a>
+                <div class="d-flex gap-3 mt-4">
+                    <button type="submit" class="btn btn-primary-custom">
+                        <i class="fas fa-save me-2"></i>Cập Nhật Phòng
+                    </button>
+                    <a href="@Url.Action("AdminRooms", "Admin")" class="btn btn-secondary-custom">
+                        <i class="fas fa-times me-2"></i>Hủy Bỏ
+                    </a>
                 </div>
             </form>
         </div>
@@ -106,27 +185,115 @@
     }
 
     <script>
-        // Image preview functionality
-        document.getElementById('ImageUrl').addEventListener('input', function() {
-            const imageUrl = this.value;
-            const preview = document.getElementById('imagePreview');
-            const noImage = document.getElementById('noImage');
-            const previewImage = document.getElementById('previewImage');
+        // Chức năng tải lên hình ảnh
+        const imageInput = document.getElementById('imageInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const currentImageContainer = document.getElementById('currentImageContainer');
+        const changeImageBtn = document.getElementById('changeImageBtn');
+        const newImagePreviewContainer = document.getElementById('newImagePreviewContainer');
+        const newPreviewImage = document.getElementById('newPreviewImage');
+        const removeNewImageBtn = document.getElementById('removeNewImageBtn');
+        const imageUrlHidden = document.getElementById('imageUrlHidden');
 
-            if (imageUrl) {
-                previewImage.src = imageUrl;
-                previewImage.onload = function() {
-                    preview.style.display = 'block';
-                    noImage.style.display = 'none';
-                };
-                previewImage.onerror = function() {
-                    preview.style.display = 'none';
-                    noImage.style.display = 'block';
-                };
-            } else {
-                preview.style.display = 'none';
-                noImage.style.display = 'block';
+        // Nhấp vào upload area để chọn file
+        if (uploadArea) {
+            uploadArea.addEventListener('click', () => {
+                imageInput.click();
+            });
+        }
+
+        // Nhấp nút thay đổi ảnh
+        if (changeImageBtn) {
+            changeImageBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                imageInput.click();
+            });
+        }
+
+        // Kéo và thả
+        if (uploadArea) {
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleImageFile(files[0]);
+                }
+            });
+        }
+
+        // Thay đổi input file
+        imageInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleImageFile(e.target.files[0]);
             }
         });
+
+        // Xử lý file hình ảnh
+        function handleImageFile(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('Vui lòng chọn file hình ảnh');
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Kích thước ảnh phải nhỏ hơn 5MB');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                newPreviewImage.src = e.target.result;
+
+                // Ẩn ảnh hiện tại và upload area
+                if (currentImageContainer) {
+                    currentImageContainer.style.display = 'none';
+                }
+                if (uploadArea) {
+                    uploadArea.style.display = 'none';
+                }
+
+                // Hiển thị preview ảnh mới
+                newImagePreviewContainer.style.display = 'block';
+
+                // Cập nhật hidden input
+                imageUrlHidden.value = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Xóa ảnh mới
+        if (removeNewImageBtn) {
+            removeNewImageBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                imageInput.value = '';
+                newPreviewImage.src = '#';
+                newImagePreviewContainer.style.display = 'none';
+
+                // Hiển thị lại ảnh hiện tại hoặc upload area
+                if (currentImageContainer) {
+                    currentImageContainer.style.display = 'block';
+                    // Khôi phục giá trị ImageUrl gốc
+                    imageUrlHidden.value = document.getElementById('currentImage').src;
+                } else if (uploadArea) {
+                    uploadArea.style.display = 'block';
+                    imageUrlHidden.value = '';
+                }
+            });
+        }
+
+        // Ngăn chặn hành vi kéo mặc định trên document
+        document.addEventListener('dragover', (e) => e.preventDefault());
+        document.addEventListener('drop', (e) => e.preventDefault());
     </script>
 }

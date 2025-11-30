@@ -4,86 +4,255 @@
     ViewData["Title"] = Model.Name;
 }
 
-<div class="container mt-5">
+<div class="container mt-4">
+    <!-- Main Room Info -->
     <div class="row">
-        <div class="col-md-8">
-            <img src="@Model.ImageUrl" class="img-fluid rounded" alt="@Model.Name">
-        </div>
-        <div class="col-md-4">
-            <h1>@Model.Name</h1>
-            <p class="lead">@Model.Description</p>
-
-            <div class="room-details mb-4">
-                <div class="detail-item">
-                    <strong>Price:</strong> $@Model.Price per night
-                </div>
-                <div class="detail-item">
-                    <strong>Type:</strong> @Model.Type
-                </div>
-                <div class="detail-item">
-                    <strong>Capacity:</strong> @Model.Capacity guests
-                </div>
-                <div class="detail-item">
-                    <strong>Size:</strong> @Model.Size sq ft
-                </div>
-                <div class="detail-item">
-                    <strong>Status:</strong>
-                    <span class="badge @(Model.IsAvailable ? "bg-success" : "bg-danger")">
-                        @(Model.IsAvailable ? "Available" : "Not Available")
-                    </span>
-                </div>
-            </div>
-
-            <div class="rating mb-4">
-                <strong>Rating: </strong>
-                @for (int i = 1; i <= 5; i++)
+        <!-- Room Image -->
+        <div class="col-lg-8 mb-4">
+            <div class="room-image-container">
+                <img src="@Model.ImageUrl" class="img-fluid rounded-3 shadow-sm" alt="@Model.Name">
+                @if (!Model.IsAvailable)
                 {
-                    <span class="star @(i <= Model.AverageRating ? "filled" : "")">★</span>
+                    <div class="room-overlay">
+                        <span class="badge bg-danger fs-6">ĐÃ HẾT PHÒNG</span>
+                    </div>
                 }
-                <span>(@Model.Reviews.Count reviews)</span>
             </div>
+        </div>
 
-            @if (Model.IsAvailable)
-            {
-                <a href="@Url.Action("Create", "Bookings", new { roomId = Model.Id })"
-                   class="btn btn-primary btn-lg w-100">Book Now</a>
-            }
-            else
-            {
-                <button class="btn btn-secondary btn-lg w-100" disabled>Not Available</button>
-            }
+        <!-- Room Details -->
+        <div class="col-lg-4">
+            <div class="room-info-card p-4 rounded-3 shadow-sm">
+                <h1 class="room-title mb-3">@Model.Name</h1>
+                <p class="room-description text-muted mb-4">@Model.Description</p>
+
+                <!-- Room Specifications -->
+                <div class="room-specs mb-4">
+                    <div class="spec-item d-flex align-items-center mb-2">
+                        <i class="fas fa-tag me-3 text-primary"></i>
+                        <div>
+                            <strong>Giá:</strong>
+                            <span class="text-success fw-bold">@Model.Price.ToString("N0") VND/đêm</span>
+                        </div>
+                    </div>
+                    <div class="spec-item d-flex align-items-center mb-2">
+                        <i class="fas fa-home me-3 text-primary"></i>
+                        <div>
+                            <strong>Loại phòng:</strong> @Model.Type
+                        </div>
+                    </div>
+                    <div class="spec-item d-flex align-items-center mb-2">
+                        <i class="fas fa-users me-3 text-primary"></i>
+                        <div>
+                            <strong>Sức chứa:</strong> @Model.Capacity người
+                        </div>
+                    </div>
+                    <div class="spec-item d-flex align-items-center mb-2">
+                        <i class="fas fa-ruler-combined me-3 text-primary"></i>
+                        <div>
+                            <strong>Diện tích:</strong> @Model.Size m²
+                        </div>
+                    </div>
+                    <div class="spec-item d-flex align-items-center mb-2">
+                        <i class="fas fa-info-circle me-3 text-primary"></i>
+                        <div>
+                            <strong>Tình trạng:</strong>
+                            <span class="badge @(Model.IsAvailable ? "bg-success" : "bg-danger") ms-2">
+                                @(Model.IsAvailable ? "CÓ SẴN" : "HẾT PHÒNG")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rating -->
+                <div class="room-rating mb-4">
+                    <div class="d-flex align-items-center">
+                        <strong class="me-3">Đánh giá:</strong>
+                        <div class="star-rating me-2">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <span class="star @(i <= Model.AverageRating ? "filled" : "")">★</span>
+                            }
+                        </div>
+                        <span class="text-muted">(@Model.Reviews.Count đánh giá)</span>
+                    </div>
+                </div>
+
+                <!-- Booking Button -->
+                @if (Model.IsAvailable)
+                {
+                    <a href="@Url.Action("Create", "Bookings", new { roomId = Model.Id })"
+                       class="btn btn-primary btn-lg w-100 py-3 fw-bold">
+                        <i class="fas fa-calendar-check me-2"></i>ĐẶT PHÒNG NGAY
+                    </a>
+                }
+                else
+                {
+                    <button class="btn btn-secondary btn-lg w-100 py-3 fw-bold" disabled>
+                        <i class="fas fa-times-circle me-2"></i>HIỆN ĐÃ HẾT PHÒNG
+                    </button>
+                }
+            </div>
         </div>
     </div>
 
     <!-- Reviews Section -->
     <div class="row mt-5">
         <div class="col-12">
-            <h3>Guest Reviews</h3>
-            @if (Model.Reviews.Any())
-            {
-                foreach (var review in Model.Reviews)
+            <div class="reviews-section">
+                <h3 class="section-title mb-4">
+                    <i class="fas fa-comments me-2 text-primary"></i>ĐÁNH GIÁ TỪ KHÁCH HÀNG
+                </h3>
+
+                @if (Model.Reviews.Any())
                 {
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <h5 class="card-title">@review.UserName</h5>
-                                <div class="rating">
-                                    @for (int i = 1; i <= 5; i++)
-                                    {
-                                        <span class="star @(i <= review.Rating ? "filled" : "")">★</span>
-                                    }
+                    <div class="reviews-list">
+                        @foreach (var review in Model.Reviews)
+                        {
+                            <div class="review-card card mb-3 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <div class="review-header d-flex justify-content-between align-items-center mb-3">
+                                        <div class="reviewer-info">
+                                            <h5 class="card-title mb-1">
+                                                <i class="fas fa-user me-2 text-muted"></i>@review.UserName
+                                            </h5>
+                                            <small class="text-muted">
+                                                <i class="fas fa-clock me-1"></i>@review.CreatedAt.ToString("dd/MM/yyyy")
+                                            </small>
+                                        </div>
+                                        <div class="review-rating">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                <span class="star @(i <= review.Rating ? "filled" : "")">★</span>
+                                            }
+                                        </div>
+                                    </div>
+                                    <p class="card-text review-comment">@review.Comment</p>
                                 </div>
                             </div>
-                            <p class="card-text">@review.Comment</p>
-                            <small class="text-muted">@review.CreatedAt.ToString("MMM dd, yyyy")</small>
-                        </div>
+                        }
                     </div>
                 }
-            }
-            else
-            {
-                <p>No reviews yet.</p>
-            }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="fas fa-comment-slash text-muted fa-3x mb-3"></i>
+                        <p class="text-muted">Chưa có đánh giá nào cho phòng này.</p>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    /* Room Image Container */
+    .room-image-container {
+        position: relative;
+        overflow: hidden;
+        border-radius: 12px;
+    }
+
+    .room-overlay {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(220, 53, 69, 0.9);
+        padding: 8px 16px;
+        border-radius: 20px;
+    }
+
+    /* Room Info Card */
+    .room-info-card {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border: 1px solid #e9ecef;
+    }
+
+    .room-title {
+        color: #2c3e50;
+        font-weight: 700;
+        font-size: 1.8rem;
+    }
+
+    .room-description {
+        line-height: 1.6;
+        font-size: 1.1rem;
+    }
+
+    /* Specifications */
+    .spec-item {
+        padding: 8px 0;
+        border-bottom: 1px solid #f1f3f4;
+    }
+
+        .spec-item:last-child {
+            border-bottom: none;
+        }
+
+    /* Star Rating */
+    .star-rating {
+        display: inline-block;
+    }
+
+    .star {
+        font-size: 1.2rem;
+        color: #ddd;
+        margin-right: 2px;
+    }
+
+        .star.filled {
+            color: #ffc107;
+        }
+
+    /* Buttons */
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+    /* Reviews */
+    .section-title {
+        color: #2c3e50;
+        font-weight: 600;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 10px;
+    }
+
+    .review-card {
+        transition: transform 0.2s ease;
+        border-radius: 10px;
+    }
+
+        .review-card:hover {
+            transform: translateY(-3px);
+        }
+
+    .review-comment {
+        line-height: 1.6;
+        color: #555;
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .room-title {
+            font-size: 1.5rem;
+        }
+
+        .btn-lg {
+        .btn-lg {
+            padding: 12px 20px;
+            font-size: 1rem;
+        }
+
+        .room-info-card {
+            margin-top: 20px;
+        }
+    }
+</style>
