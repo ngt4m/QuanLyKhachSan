@@ -1,193 +1,264 @@
 ﻿@model QuanLyKhachSan.ViewModels.Admin.RevenueReportViewModel
 @{
-    ViewData["Title"] = "Revenue Report";
+    ViewData["Title"] = "Báo Cáo Doanh Thu";
     Layout = "_AdminLayout";
 }
 
-<div class="container-fluid">
-    <h1 class="mt-4">Revenue Report</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/revenue-report.css" />
+}
 
-    <!-- Filter Section -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5 class="mb-0">Report Filters</h5>
+<div class="revenue-report-page">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="page-title">
+                        <i class="fas fa-money-bill-wave"></i>
+                        Báo Cáo Doanh Thu
+                    </h1>
+                    <p class="page-subtitle">Phân tích chi tiết doanh thu và xu hướng kinh doanh</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-export" onclick="window.print()">
+                        <i class="fas fa-print"></i> In Báo Cáo
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <form method="get" class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label">Start Date</label>
-                    <input type="date" name="startDate" class="form-control" value="@Model.StartDate.ToString("yyyy-MM-dd")">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">End Date</label>
-                    <input type="date" name="endDate" class="form-control" value="@Model.EndDate.ToString("yyyy-MM-dd")">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">&nbsp;</label>
-                    <button type="submit" class="btn btn-primary w-100">Generate Report</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
-    <!-- Summary Cards -->
-    <div class="row mb-4">
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-primary text-white mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Revenue</div>
-                            <div class="h5 mb-0">$@Model.TotalRevenue.ToString("N2")</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-dollar-sign fa-2x"></i>
-                        </div>
+        <!-- Filter Section -->
+        <div class="filter-card">
+            <div class="filter-header">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Chọn Khoảng Thời Gian</span>
+            </div>
+            <div class="filter-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            <i class="fas fa-calendar-day"></i> Ngày Bắt Đầu
+                        </label>
+                        <input type="date" name="startDate" class="form-control" value="@Model.StartDate.ToString("yyyy-MM-dd")">
                     </div>
-                </div>
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            <i class="fas fa-calendar-day"></i> Ngày Kết Thúc
+                        </label>
+                        <input type="date" name="endDate" class="form-control" value="@Model.EndDate.ToString("yyyy-MM-dd")">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="submit" class="btn btn-generate">
+                            <i class="fas fa-chart-line"></i> Xem Báo Cáo
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-success text-white mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Bookings</div>
-                            <div class="h5 mb-0">@Model.TotalBookings</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-calendar fa-2x"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-info text-white mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Confirmed</div>
-                            <div class="h5 mb-0">@Model.ConfirmedBookings</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-check-circle fa-2x"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-warning text-white mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Checked Out</div>
-                            <div class="h5 mb-0">@Model.CheckedOutBookings</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-door-open fa-2x"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Revenue by Room Type -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Revenue by Room Type</h5>
+        <!-- Summary Cards -->
+        <div class="summary-section">
+            <div class="row g-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="summary-card revenue">
+                        <div class="card-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-label">Tổng Doanh Thu</div>
+                            <div class="card-value">@Model.TotalRevenue.ToString("N0")₫</div>
+                        </div>
+                        <div class="card-wave"></div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Room Type</th>
-                                    <th>Revenue</th>
-                                    <th>Bookings</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.RevenueByRoomTypes)
-                                {
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="summary-card bookings">
+                        <div class="card-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-label">Tổng Đặt Phòng</div>
+                            <div class="card-value">@Model.TotalBookings</div>
+                        </div>
+                        <div class="card-wave"></div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="summary-card confirmed">
+                        <div class="card-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-label">Đã Xác Nhận</div>
+                            <div class="card-value">@Model.ConfirmedBookings</div>
+                        </div>
+                        <div class="card-wave"></div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="summary-card completed">
+                        <div class="card-icon">
+                            <i class="fas fa-door-closed"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-label">Đã Hoàn Thành</div>
+                            <div class="card-value">@Model.CheckedOutBookings</div>
+                        </div>
+                        <div class="card-wave"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="row g-4">
+            <!-- Revenue by Room Type -->
+            <div class="col-lg-6">
+                <div class="report-card">
+                    <div class="report-card-header">
+                        <div class="header-icon">
+                            <i class="fas fa-bed"></i>
+                        </div>
+                        <h5>Doanh Thu Theo Loại Phòng</h5>
+                    </div>
+                    <div class="report-card-body">
+                        <div class="table-responsive">
+                            <table class="table report-table">
+                                <thead>
                                     <tr>
-                                        <td>@item.RoomType</td>
-                                        <td>$@item.Revenue.ToString("N2")</td>
-                                        <td>@item.BookingCount</td>
+                                        <th>Loại Phòng</th>
+                                        <th>Doanh Thu</th>
+                                        <th>Số Lượt Đặt</th>
+                                        <th>Biểu Đồ</th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        var maxRevenue = Model.RevenueByRoomTypes.Any() ? Model.RevenueByRoomTypes.Max(r => r.Revenue) : 1;
+                                    }
+                                    @foreach (var item in Model.RevenueByRoomTypes)
+                                    {
+                                        var percentage = maxRevenue > 0 ? (item.Revenue / maxRevenue * 100) : 0;
+                                        var roomTypeClass = item.RoomType.ToLower().Replace(" ", "");
+
+                                        <tr>
+                                            <td>
+                                                <span class="room-type-badge">
+                                                    <i class="fas fa-bed"></i>
+                                                    @switch (item.RoomType)
+                                                    {
+                                                        case "Standard":
+                                                            <span>Tiêu chuẩn</span>
+                                                            ; break;
+                                                        case "Deluxe":
+
+                                                            <span>Cao cấp</span>
+                                                            ; break;
+                                                        case "Suite":
+
+                                                            <span>Hạng sang</span>
+                                                            ; break;
+                                                        case "Family":
+
+                                                            <span>Gia đình</span>
+                                                            ; break;
+                                                        default:
+
+                                                            <span>@item.RoomType</span>
+                                                            ; break;
+                                                    }
+                                                </span>
+                                            </td>
+                                            <td class="revenue-cell">@item.Revenue.ToString("N0")₫</td>
+                                            <td class="count-cell">@item.BookingCount</td>
+                                            <td>
+                                                <div class="progress-bar-container">
+                                                    <div class="progress-bar" style="width: @percentage%"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Revenue -->
+            <div class="col-lg-6">
+                <div class="report-card">
+                    <div class="report-card-header">
+                        <div class="header-icon">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <h5>Doanh Thu Theo Ngày</h5>
+                    </div>
+                    <div class="report-card-body">
+                        <div class="scrollable-table">
+                            <table class="table report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ngày</th>
+                                        <th>Doanh Thu</th>
+                                        <th>Số Lượt Đặt</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.DailyRevenues)
+                                    {
+                                        <tr>
+                                            <td class="date-cell">
+                                                <i class="fas fa-calendar"></i>
+                                                @item.Date.ToString("dd/MM/yyyy")
+                                            </td>
+                                            <td class="revenue-cell">@item.Revenue.ToString("N0")₫</td>
+                                            <td class="count-cell">@item.BookingCount</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Daily Revenue -->
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Daily Revenue</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Revenue</th>
-                                    <th>Bookings</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.DailyRevenues)
-                                {
-                                    <tr>
-                                        <td>@item.Date.ToString("MMM dd, yyyy")</td>
-                                        <td>$@item.Revenue.ToString("N2")</td>
-                                        <td>@item.BookingCount</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+        <!-- Monthly Revenue Trend -->
+        <div class="row g-4 mt-2">
+            <div class="col-12">
+                <div class="report-card">
+                    <div class="report-card-header">
+                        <div class="header-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h5>Xu Hướng Doanh Thu Theo Tháng</h5>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                    <div class="report-card-body">
+                        <div class="monthly-chart">
+                            @{
+                                var maxMonthlyRevenue = Model.MonthlyRevenues.Any() ? Model.MonthlyRevenues.Max(m => m.Revenue) : 1;
+                            }
+                            @foreach (var item in Model.MonthlyRevenues)
+                            {
+                                var heightPercent = maxMonthlyRevenue > 0 ? (item.Revenue / maxMonthlyRevenue * 100) : 0;
 
-    <!-- Monthly Revenue -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Monthly Revenue Trend</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Month</th>
-                                    <th>Revenue</th>
-                                    <th>Bookings</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.MonthlyRevenues)
-                                {
-                                    <tr>
-                                        <td>@item.Month</td>
-                                        <td>$@item.Revenue.ToString("N2")</td>
-                                        <td>@item.BookingCount</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+                                <div class="month-item">
+                                    <div class="month-bar-wrapper">
+                                        <div class="month-bar" style="height: @heightPercent%">
+                                            <span class="month-value">@item.Revenue.ToString("N0")₫</span>
+                                            <span class="month-count">@item.BookingCount đặt</span>
+                                        </div>
+                                    </div>
+                                    <div class="month-label">@item.Month</div>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>

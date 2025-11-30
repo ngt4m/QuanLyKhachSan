@@ -1,62 +1,236 @@
 ﻿@model List<QuanLyKhachSan.ViewModels.Admin.ReviewViewModel>
 @{
-    ViewData["Title"] = "Manage Reviews";
+    ViewData["Title"] = "Quản Lý Đánh Giá";
     Layout = "_AdminLayout";
 }
 
-<div class="container-fluid">
-    <h1 class="mt-4">Manage Reviews</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-reviews.css" />
+}
 
-    <div class="card mb-4">
-        <div class="card-header">
-            <i class="fas fa-star me-1"></i>
-            Guest Reviews
+<div class="admin-reviews-page">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="page-title">
+                        <i class="fas fa-star"></i>
+                        Quản Lý Đánh Giá
+                    </h1>
+                    <p class="page-subtitle">Xem và quản lý tất cả đánh giá từ khách hàng</p>
+                </div>
+                <div class="header-right">
+                    <div class="stats-summary">
+                        <div class="stat-item">
+                            <div class="stat-icon total">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-value">@Model.Count()</span>
+                                <span class="stat-label">Tổng đánh giá</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon average">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-value">@(Model.Any() ? Model.Average(r => r.Rating).ToString("N1") : "0")</span>
+                                <span class="stat-label">Điểm TB</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>User</th>
-                            <th>Room</th>
-                            <th>Rating</th>
-                            <th>Comment</th>
-                            <th>Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var review in Model)
-                        {
+
+        <!-- Filters Section -->
+        <div class="filters-card">
+            <div class="filters-header">
+                <i class="fas fa-filter"></i>
+                <span>Lọc Đánh Giá</span>
+            </div>
+            <div class="filters-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <select class="form-select" id="ratingFilter">
+                            <option value="">Tất cả đánh giá</option>
+                            <option value="5">⭐⭐⭐⭐⭐ (5 sao)</option>
+                            <option value="4">⭐⭐⭐⭐ (4 sao)</option>
+                            <option value="3">⭐⭐⭐ (3 sao)</option>
+                            <option value="2">⭐⭐ (2 sao)</option>
+                            <option value="1">⭐ (1 sao)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Tìm theo tên, phòng, nội dung...">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-primary w-100" onclick="applyFilters()">
+                            <i class="fas fa-search"></i> Lọc
+                        </button>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-secondary w-100" onclick="resetFilters()">
+                            <i class="fas fa-redo"></i> Đặt lại
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reviews Table Card -->
+        <div class="table-card">
+            <div class="table-card-header">
+                <div class="header-left">
+                    <i class="fas fa-list"></i>
+                    <span>Danh Sách Đánh Giá Từ Khách Hàng</span>
+                </div>
+            </div>
+            <div class="table-card-body">
+                <div class="table-responsive">
+                    <table class="table reviews-table" id="reviewsTable">
+                        <thead>
                             <tr>
-                                <td>@review.Id</td>
-                                <td>@review.UserName</td>
-                                <td>@review.RoomName</td>
-                                <td>
-                                    <div class="rating">
-                                        @for (int i = 1; i <= 5; i++)
-                                        {
-                                            <span class="star @(i <= review.Rating ? "filled" : "")">★</span>
-                                        }
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-hashtag"></i>
+                                        <span>ID</span>
                                     </div>
-                                </td>
-                                <td>@review.Comment</td>
-                                <td>@review.CreatedAt.ToString("MMM dd, yyyy")</td>
-                                <td>
-                                    <form method="post" asp-action="Delete" asp-controller="Reviews"
-                                          onsubmit="return confirm('Are you sure you want to delete this review?');">
-                                        <input type="hidden" name="id" value="@review.Id" />
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </button>
-                                    </form>
-                                </td>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-user"></i>
+                                        <span>Khách Hàng</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-door-open"></i>
+                                        <span>Phòng</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-star"></i>
+                                        <span>Đánh Giá</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-comment"></i>
+                                        <span>Nhận Xét</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-calendar"></i>
+                                        <span>Ngày Đánh Giá</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-cog"></i>
+                                        <span>Thao Tác</span>
+                                    </div>
+                                </th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var review in Model)
+                            {
+                                <tr class="review-row" data-rating="@review.Rating">
+                                    <td class="id-cell">
+                                        <span class="badge-id">#@review.Id</span>
+                                    </td>
+                                    <td>
+                                        <div class="user-info">
+                                            <div class="user-avatar">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <span class="user-name">@review.UserName</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="room-info">
+                                            <i class="fas fa-bed"></i>
+                                            <span>@review.RoomName</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="rating-display">
+                                            <div class="stars">
+                                                @for (int i = 1; i <= 5; i++)
+                                                {
+                                                    <span class="star @(i <= review.Rating ? "filled" : "")">★</span>
+                                                }
+                                            </div>
+                                            <span class="rating-number">@review.Rating/5</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="comment-cell">
+                                            <p class="comment-text">@review.Comment</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="date-text">@review.CreatedAt.ToString("dd/MM/yyyy")</span>
+                                    </td>
+                                    <td>
+                                        <form method="post" asp-action="Delete" asp-controller="Reviews" class="d-inline"
+                                              onsubmit="return confirm('Bạn có chắc muốn xóa đánh giá này?\n\nKhách hàng: @review.UserName\nPhòng: @review.RoomName');">
+                                            <input type="hidden" name="id" value="@review.Id" />
+                                            <button type="submit" class="btn-action btn-delete" title="Xóa đánh giá">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                            @if (!Model.Any())
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        <div class="no-data">
+                                            <i class="fas fa-star-half-alt"></i>
+                                            <p>Chưa có đánh giá nào</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Simple filtering
+    function applyFilters() {
+        const ratingFilter = document.getElementById('ratingFilter').value;
+        const searchText = document.getElementById('searchInput').value.toLowerCase();
+        const rows = document.querySelectorAll('.review-row');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const rating = row.dataset.rating;
+            const rowText = row.textContent.toLowerCase();
+            let show = true;
+
+            if (ratingFilter && rating !== ratingFilter) show = false;
+            if (searchText && !rowText.includes(searchText)) show = false;
+
+            row.style.display = show ? '' : 'none';
+            if (show) visibleCount++;
+        });
+    }
+
+    function resetFilters() {
+        document.getElementById('ratingFilter').value = '';
+        document.getElementById('searchInput').value = '';
+        document.querySelectorAll('.review-row').forEach(row => row.style.display = '');
+    }
+</script>

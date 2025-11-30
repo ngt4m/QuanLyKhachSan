@@ -1,159 +1,294 @@
 ﻿@model QuanLyKhachSan.ViewModels.Admin.DashboardViewModel
 @{
-    ViewData["Title"] = "Admin Dashboard";
+    ViewData["Title"] = "Tổng Quan Quản Trị";
     Layout = "_AdminLayout";
 }
 
-<div class="container-fluid">
-    <h1 class="mt-4">Dashboard</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-dashboard.css" />
+}
 
-    <!-- Statistics Cards -->
-    <div class="row mt-4">
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-primary text-white mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Bookings</div>
-                            <div class="h5 mb-0">@Model.TotalBookings</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-calendar fa-2x"></i>
+<div class="admin-dashboard-page">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="page-title">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Tổng Quan Quản Trị
+                    </h1>
+                    <p class="page-subtitle">Chào mừng trở lại! Đây là tổng quan hệ thống của bạn</p>
+                </div>
+                <div class="header-right">
+                    <div class="current-time">
+                        <i class="fas fa-clock"></i>
+                        <span id="currentDateTime"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards Row 1 -->
+        <div class="row g-4 mb-4">
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card bookings">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Tổng Đặt Phòng</div>
+                        <div class="stat-value">@Model.TotalBookings</div>
+                    </div>
+                    <div class="stat-wave"></div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card users">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Tổng Người Dùng</div>
+                        <div class="stat-value">@Model.TotalUsers</div>
+                    </div>
+                    <div class="stat-wave"></div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card rooms">
+                    <div class="stat-icon">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Tổng Số Phòng</div>
+                        <div class="stat-value">@Model.TotalRooms</div>
+                    </div>
+                    <div class="stat-wave"></div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card revenue">
+                    <div class="stat-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Tổng Doanh Thu</div>
+                        <div class="stat-value">@Model.TotalRevenue.ToString("N0")₫</div>
+                    </div>
+                    <div class="stat-wave"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards Row 2 -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <div class="info-card monthly">
+                    <div class="info-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label">Doanh Thu Tháng Này</div>
+                        <div class="info-value">@Model.MonthlyRevenue.ToString("N0")₫</div>
+                    </div>
+                    <div class="info-badge">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-card reports">
+                    <div class="info-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label">Báo Cáo Nhanh</div>
+                        <div class="info-links">
+                            <a href="@Url.Action("RevenueReport", "Admin")" class="report-link">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                                Báo Cáo Doanh Thu
+                            </a>
+                            <span class="separator">|</span>
+                            <a href="@Url.Action("BookingReport", "Admin")" class="report-link">
+                                <i class="fas fa-file-alt"></i>
+                                Báo Cáo Đặt Phòng
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-success text-white mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Users</div>
-                            <div class="h5 mb-0">@Model.TotalUsers</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-users fa-2x"></i>
-                        </div>
-                    </div>
+        <!-- Recent Bookings -->
+        <div class="bookings-card">
+            <div class="bookings-header">
+                <div class="header-left">
+                    <i class="fas fa-history"></i>
+                    <span>Đặt Phòng Gần Đây</span>
                 </div>
+                @* <div class="header-right">
+                    <a href="@Url.Action("ManageBookings", "Admin")" class="view-all-link">
+                        Xem Tất Cả
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div> *@
             </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-warning text-white mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Rooms</div>
-                            <div class="h5 mb-0">@Model.TotalRooms</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-bed fa-2x"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-danger text-white mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Revenue</div>
-                            <div class="h5 mb-0">$@Model.TotalRevenue.ToString("N2")</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-dollar-sign fa-2x"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Monthly Revenue -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card bg-info text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Monthly Revenue</div>
-                            <div class="h5 mb-0">$@Model.MonthlyRevenue.ToString("N2")</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-chart-line fa-2x"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card bg-secondary text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Quick Reports</div>
-                            <div class="h6 mb-0">
-                                <a href="@Url.Action("RevenueReport", "Admin")" class="text-white">Revenue Report</a> |
-                                <a href="@Url.Action("BookingReport", "Admin")" class="text-white">Booking Report</a>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-chart-bar fa-2x"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recent Bookings -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <i class="fas fa-table me-1"></i>
-            Recent Bookings
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>User</th>
-                            <th>Room</th>
-                            <th>Check-in</th>
-                            <th>Check-out</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var booking in Model.RecentBookings)
-                        {
+            <div class="bookings-body">
+                <div class="table-responsive">
+                    <table class="table bookings-table">
+                        <thead>
                             <tr>
-                                <td>@booking.Id</td>
-                                <td>@booking.UserName</td>
-                                <td>@booking.RoomName</td>
-                                <td>@booking.CheckInDate.ToString("MMM dd, yyyy")</td>
-                                <td>@booking.CheckOutDate.ToString("MMM dd, yyyy")</td>
-                                <td>$@booking.TotalPrice.ToString("N2")</td>
-                                <td>
-                                    @{
-                                        var statusClass = booking.Status.ToString().ToLower();
-                                        statusClass = statusClass == "checkedin" ? "checked-in" : statusClass;
-                                        statusClass = statusClass == "checkedout" ? "checked-out" : statusClass;
-                                    }
-                                    <span class="badge bg-@statusClass">@booking.Status</span>
-                                </td>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-hashtag"></i>
+                                        <span>ID</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-user"></i>
+                                        <span>Khách Hàng</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-door-open"></i>
+                                        <span>Phòng</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-calendar-check"></i>
+                                        <span>Nhận Phòng</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-calendar-times"></i>
+                                        <span>Trả Phòng</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        <span>Tổng Tiền</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="th-content">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span>Trạng Thái</span>
+                                    </div>
+                                </th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var booking in Model.RecentBookings)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="badge-id">#@booking.Id</span>
+                                    </td>
+                                    <td>
+                                        <div class="user-cell">
+                                            <div class="user-avatar">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <span class="user-name">@booking.UserName</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="room-cell">
+                                            <i class="fas fa-bed"></i>
+                                            <span>@booking.RoomName</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="date-text">@booking.CheckInDate.ToString("dd/MM/yyyy")</span>
+                                    </td>
+                                    <td>
+                                        <span class="date-text">@booking.CheckOutDate.ToString("dd/MM/yyyy")</span>
+                                    </td>
+                                    <td>
+                                        <span class="price-text">@booking.TotalPrice.ToString("N0")₫</span>
+                                    </td>
+                                    <td>
+                                        @{
+                                            var statusClass = booking.Status.ToString().ToLower();
+                                            var statusText = "";
+                                            var statusIcon = "";
+
+                                            switch (booking.Status.ToString())
+                                            {
+                                                case "Pending":
+                                                    statusText = "Chờ xử lý";
+                                                    statusIcon = "clock";
+                                                    statusClass = "pending";
+                                                    break;
+                                                case "Confirmed":
+                                                    statusText = "Đã xác nhận";
+                                                    statusIcon = "check-circle";
+                                                    statusClass = "confirmed";
+                                                    break;
+                                                case "CheckedIn":
+                                                    statusText = "Đã nhận phòng";
+                                                    statusIcon = "door-open";
+                                                    statusClass = "checkedin";
+                                                    break;
+                                                case "CheckedOut":
+                                                    statusText = "Đã trả phòng";
+                                                    statusIcon = "door-closed";
+                                                    statusClass = "checkedout";
+                                                    break;
+                                                case "Cancelled":
+                                                    statusText = "Đã hủy";
+                                                    statusIcon = "times-circle";
+                                                    statusClass = "cancelled";
+                                                    break;
+                                                default:
+                                                    statusText = booking.Status.ToString();
+                                                    statusIcon = "info-circle";
+                                                    break;
+                                            }
+                                        }
+                                        <span class="status-badge status-@statusClass">
+                                            <i class="fas fa-@statusIcon"></i>
+                                            @statusText
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Simple JavaScript for current time display
+    function updateTime() {
+        const now = new Date();
+        const options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        };
+        const timeString = now.toLocaleDateString('vi-VN', options);
+        const timeElement = document.getElementById('currentDateTime');
+        if (timeElement) {
+            timeElement.textContent = timeString;
+        }
+    }
+    updateTime();
+    setInterval(updateTime, 60000); // Update every minute
+</script>
