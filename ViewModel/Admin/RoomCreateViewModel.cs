@@ -30,7 +30,7 @@ namespace QuanLyKhachSan.ViewModels.Admin
         [StringLength(50)]
         public string Type { get; set; } = string.Empty;
 
-        [Url]
+        //[Url]
         [Display(Name = "Image URL")]
         public string? ImageUrl { get; set; }
 

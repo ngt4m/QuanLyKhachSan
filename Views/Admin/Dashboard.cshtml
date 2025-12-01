@@ -77,7 +77,7 @@
                     </div>
                     <div class="stat-content">
                         <div class="stat-label">Tổng Doanh Thu</div>
-                        <div class="stat-value">@Model.TotalRevenue.ToString("N0")₫</div>
+                        <div class="stat-value">@Model.TotalRevenue.ToString("N0")$</div>
                     </div>
                     <div class="stat-wave"></div>
                 </div>
@@ -215,7 +215,7 @@
                                         <span class="date-text">@booking.CheckOutDate.ToString("dd/MM/yyyy")</span>
                                     </td>
                                     <td>
-                                        <span class="price-text">@booking.TotalPrice.ToString("N0")₫</span>
+                                        <span class="price-text">@booking.TotalPrice.ToString("N0")$</span>
                                     </td>
                                     <td>
                                         @{

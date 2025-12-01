@@ -81,10 +81,56 @@ namespace QuanLyKhachSan.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRoom(RoomCreateViewModel model)
+        public async Task<IActionResult> AddRoom(RoomCreateViewModel model, IFormFile ImageFile)
         {
             if (ModelState.IsValid)
             {
+                // Xử lý upload ảnh
+                string imageUrl = model.ImageUrl; // Giữ URL cũ nếu có
+
+                if (ImageFile != null && ImageFile.Length > 0)
+                {
+                    // Kiểm tra file có phải là ảnh không
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                    var extension = Path.GetExtension(ImageFile.FileName).ToLower();
+
+                    if (!allowedExtensions.Contains(extension))
+                    {
+                        ModelState.AddModelError("ImageFile", "Chỉ chấp nhận file ảnh (JPG, PNG, GIF)");
+                        return View(model);
+                    }
+
+                    // Kiểm tra kích thước file (max 5MB)
+                    if (ImageFile.Length > 5 * 1024 * 1024)
+                    {
+                        ModelState.AddModelError("ImageFile", "Kích thước ảnh không được vượt quá 5MB");
+                        return View(model);
+                    }
+
+                    // Tạo tên file unique
+                    var fileName = $"{Guid.NewGuid()}{extension}";
+
+                    // Đường dẫn lưu file
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "rooms");
+
+                    // Tạo thư mục nếu chưa tồn tại
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    // Lưu file
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ImageFile.CopyToAsync(fileStream);
+                    }
+
+                    // Cập nhật URL
+                    imageUrl = $"/images/rooms/{fileName}";
+                }
+
                 var room = new Room
                 {
                     Name = model.Name,
@@ -93,7 +139,7 @@ namespace QuanLyKhachSan.Controllers
                     Capacity = model.Capacity,
                     Size = model.Size,
                     Type = model.Type,
-                    ImageUrl = model.ImageUrl,
+                    ImageUrl = imageUrl,
                     IsAvailable = model.IsAvailable,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
@@ -102,7 +148,7 @@ namespace QuanLyKhachSan.Controllers
                 _context.Rooms.Add(room);
                 await _context.SaveChangesAsync();
 
-                TempData["SuccessMessage"] = "Room added successfully!";
+                TempData["SuccessMessage"] = "Thêm phòng thành công!";
                 return RedirectToAction("AdminRooms");
             }
 
@@ -134,8 +180,10 @@ namespace QuanLyKhachSan.Controllers
             return View(model);
         }
 
+
+
         [HttpPost]
-        public async Task<IActionResult> EditRoom(RoomCreateViewModel model)
+        public async Task<IActionResult> EditRoom(RoomCreateViewModel model, IFormFile ImageFile)
         {
             if (ModelState.IsValid)
             {
@@ -145,20 +193,77 @@ namespace QuanLyKhachSan.Controllers
                     return NotFound();
                 }
 
+                // Xử lý upload ảnh mới
+                string imageUrl = room.ImageUrl; // Giữ ảnh cũ mặc định
+
+                if (ImageFile != null && ImageFile.Length > 0)
+                {
+                    // Kiểm tra file có phải là ảnh không
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                    var extension = Path.GetExtension(ImageFile.FileName).ToLower();
+
+                    if (!allowedExtensions.Contains(extension))
+                    {
+                        ModelState.AddModelError("ImageFile", "Chỉ chấp nhận file ảnh (JPG, PNG, GIF)");
+                        return View(model);
+                    }
+
+                    // Kiểm tra kích thước file (max 5MB)
+                    if (ImageFile.Length > 5 * 1024 * 1024)
+                    {
+                        ModelState.AddModelError("ImageFile", "Kích thước ảnh không được vượt quá 5MB");
+                        return View(model);
+                    }
+
+                    // Xóa ảnh cũ nếu có (và không phải URL external)
+                    if (!string.IsNullOrEmpty(room.ImageUrl) && room.ImageUrl.StartsWith("/images/"))
+                    {
+                        var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", room.ImageUrl.TrimStart('/'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
+                    // Tạo tên file unique
+                    var fileName = $"{Guid.NewGuid()}{extension}";
+
+                    // Đường dẫn lưu file
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "rooms");
+
+                    // Tạo thư mục nếu chưa tồn tại
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    // Lưu file mới
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ImageFile.CopyToAsync(fileStream);
+                    }
+
+                    // Cập nhật URL mới
+                    imageUrl = $"/images/rooms/{fileName}";
+                }
+
+                // Cập nhật thông tin phòng
                 room.Name = model.Name;
                 room.Description = model.Description;
                 room.Price = model.Price;
                 room.Capacity = model.Capacity;
                 room.Size = model.Size;
                 room.Type = model.Type;
-                room.ImageUrl = model.ImageUrl;
+                room.ImageUrl = imageUrl; // Dùng ảnh mới hoặc giữ ảnh cũ
                 room.IsAvailable = model.IsAvailable;
                 room.UpdatedAt = DateTime.UtcNow;
 
                 _context.Rooms.Update(room);
                 await _context.SaveChangesAsync();
 
-                TempData["SuccessMessage"] = "Room updated successfully!";
+                TempData["SuccessMessage"] = "Cập nhật phòng thành công!";
                 return RedirectToAction("AdminRooms");
             }
 
