@@ -1,0 +1,310 @@
+﻿/* Booking Page Styles - Màu nền sang trọng */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --success-color: #27ae60;
+    --warning-color: #f39c12;
+    --light-color: #ecf0f1;
+    --dark-color: #2c3e50;
+    --gradient-primary: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+    --gradient-success: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    --gradient-warning: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 10px 20px rgba(0, 0, 0, 0.15);
+    --shadow-heavy: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Background cho toàn bộ trang */
+body {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+}
+
+/* Container chính */
+.container {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+/* Card chính */
+.booking-card {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-heavy);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+    .booking-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-heavy);
+    }
+
+/* Header của card */
+.booking-header {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 1.5rem;
+    border-bottom: none;
+    position: relative;
+    overflow: hidden;
+}
+
+    .booking-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient( 45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70% );
+        transform: rotate(30deg);
+        
+    }
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%) rotate(30deg);
+    }
+
+    100% {
+        transform: translateX(100%) rotate(30deg);
+    }
+}
+
+.booking-header h3 {
+    font-weight: 700;
+    font-size: 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* Form controls */
+.form-control-lg {
+    border-radius: 12px;
+    border: 2px solid #e0e0e0;
+    padding: 12px 16px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+    .form-control-lg:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.3rem rgba(52, 152, 219, 0.2);
+        transform: translateY(-2px);
+        background: white;
+    }
+
+
+
+.custom-textarea {
+    border-radius: 12px;
+    border: 2px solid #e0e0e0;
+    padding: 16px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+    .custom-textarea:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.3rem rgba(52, 152, 219, 0.2);
+        transform: translateY(-2px);
+        background: white;
+    }
+
+/* Booking Summary */
+.booking-summary {
+    background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+    border-radius: 16px;
+    border: 2px solid #e3f2fd;
+    position: relative;
+    overflow: hidden;
+}
+
+    .booking-summary::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
+    }
+
+.summary-title {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 1.3rem;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+    .summary-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: var(--secondary-color);
+        border-radius: 2px;
+    }
+
+.summary-item {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+    color: var(--dark-color);
+    font-size: 0.95rem;
+}
+
+    .summary-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+.total-price {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid var(--secondary-color);
+    font-size: 1.1rem;
+}
+
+/* Buttons */
+.btn-booking-confirm {
+    background: var(--gradient-success);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 15px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-medium);
+}
+
+    .btn-booking-confirm:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-heavy);
+        color: white;
+    }
+
+    .btn-booking-confirm:active {
+        transform: translateY(-1px);
+    }
+
+    .btn-booking-confirm::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .btn-booking-confirm:hover::before {
+        left: 100%;
+    }
+
+.btn-booking-cancel {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    border-radius: 12px;
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+    .btn-booking-cancel:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-light);
+    }
+
+/* Labels và form groups */
+.form-label {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+    .form-label i {
+        margin-right: 8px;
+        color: var(--secondary-color);
+    }
+
+/* Error messages */
+.text-danger {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: 4px;
+    padding-left: 5px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px 15px;
+    }
+
+    .booking-card {
+        margin: 0 10px;
+    }
+
+    .booking-header h3 {
+        font-size: 1.3rem;
+    }
+
+    .btn-booking-confirm,
+    .btn-booking-cancel {
+        padding: 12px;
+        font-size: 1rem;
+    }
+
+    .booking-summary {
+        padding: 1.5rem !important;
+    }
+}
+
+
+
+
+
+/* Hiệu ứng cho các input khi hover */
+.form-control-lg:hover {
+    border-color: #b0bec5;
+    box-shadow: var(--shadow-light);
+}
+
+/* Custom scrollbar cho textarea */
+.custom-textarea::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-textarea::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.custom-textarea::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: 4px;
+}
+
+    .custom-textarea::-webkit-scrollbar-thumb:hover {
+        background: #2980b9;
+    }

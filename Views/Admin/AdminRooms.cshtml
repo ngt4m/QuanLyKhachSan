@@ -104,10 +104,11 @@
                     <div class="col-md-3">
                         <select class="form-select" id="typeFilter">
                             <option value="">Tất cả loại phòng</option>
-                            <option value="Standard">Tiêu chuẩn</option>
-                            <option value="Deluxe">Cao cấp</option>
-                            <option value="Suite">Hạng sang</option>
-                            <option value="Family">Gia đình</option>
+                            <option value="Standard">Standard</option>
+                            <option value="Deluxe">Duluxe</option>
+                            <option value="Suite">Suite</option>
+                            <option value="Family">Family</option>
+                            <option value="Presidential">Presidential</option>
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -211,20 +212,24 @@
                                             @switch (room.Type)
                                             {
                                                 case "Standard":
-                                                    <span>Tiêu chuẩn</span>
+                                                    <span>Standard</span>
                                                     ; break;
                                                 case "Deluxe":
 
-                                                    <span>Cao cấp</span>
+                                                    <span>Duluxe</span>
                                                     ; break;
                                                 case "Suite":
 
-                                                    <span>Hạng sang</span>
+                                                    <span>Suite</span>
                                                     ; break;
                                                 case "Family":
 
-                                                    <span>Gia đình</span>
+                                                    <span>Family</span>
                                                     ; break;
+                                                case "Presidential":
+                                                    <span>Presidential</span>
+                                                    ;break;
+
                                                 default:
 
                                                     <span>@room.Type</span>

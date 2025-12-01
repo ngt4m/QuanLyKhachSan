@@ -37,19 +37,19 @@
                         <label class="form-label">Loại phòng</label>
                         <select name="roomType" class="form-control">
                             <option value="">Tất cả loại</option>
-                            <option value="Standard" selected="@(Model.RoomType == "Standard")">Tiêu chuẩn</option>
-                            <option value="Deluxe" selected="@(Model.RoomType == "Deluxe")">Cao cấp</option>
-                            <option value="Suite" selected="@(Model.RoomType == "Suite")">Hạng sang</option>
-                            <option value="Family" selected="@(Model.RoomType == "Family")">Gia đình</option>
+                            <option value="Standard" selected="@(Model.RoomType == "Standard")">Standard</option>
+                            <option value="Deluxe" selected="@(Model.RoomType == "Deluxe")">Duluxe</option>
+                            <option value="Suite" selected="@(Model.RoomType == "Suite")">Suite</option>
+                            <option value="Family" selected="@(Model.RoomType == "Family")">Family</option>
                         </select>
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">Giá tối thiểu</label>
-                        <input type="number" name="minPrice" class="form-control" placeholder="0₫" value="@Model.MinPrice">
+                        <input type="number" name="minPrice" class="form-control" placeholder="0$" value="@Model.MinPrice">
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">Giá tối đa</label>
-                        <input type="number" name="maxPrice" class="form-control" placeholder="10,000,000₫" value="@Model.MaxPrice">
+                        <input type="number" name="maxPrice" class="form-control" placeholder="10,000$" value="@Model.MaxPrice">
                     </div>
                     <div class="col-md-1 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary w-100">

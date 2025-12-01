@@ -1,15 +1,17 @@
 ﻿@model QuanLyKhachSan.ViewModels.Booking.BookingViewModel
 
 @{
-    ViewData["Title"] = "Book Room";
+    ViewData["Title"] = "Đặt Phòng";
 }
-
+@section Styles {
+    <link rel="stylesheet" href="~/css/booking-create.css" />
+}
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">Book Room: @Model.RoomName</h3>
+            <div class="card booking-card">
+                <div class="card-header booking-header">
+                    <h3 class="mb-0"><i class="fas fa-calendar-check me-2"></i>ĐẶT PHÒNG: @Model.RoomName</h3>
                 </div>
                 <div class="card-body">
                     <form method="post">
@@ -18,53 +20,89 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label asp-for="CheckInDateInput" class="form-label"></label>
-                                    <input asp-for="CheckInDateInput" class="form-control" type="date" />
-                                    <span asp-validation-for="CheckInDateInput" class="text-danger"></span>
+                                <div class="form-group mb-4">
+                                    <label asp-for="CheckInDateInput" class="form-label fw-bold">
+                                        <i class="fas fa-sign-in-alt me-2"></i>Ngày nhận phòng
+                                    </label>
+                                    <input asp-for="CheckInDateInput" class="form-control form-control-lg date-input" type="date" />
+                                    <span asp-validation-for="CheckInDateInput" class="text-danger small"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label asp-for="CheckOutDateInput" class="form-label"></label>
-                                    <input asp-for="CheckOutDateInput" class="form-control" type="date" />
-                                    <span asp-validation-for="CheckOutDateInput" class="text-danger"></span>
+                                <div class="form-group mb-4">
+                                    <label asp-for="CheckOutDateInput" class="form-label fw-bold">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Ngày trả phòng
+                                    </label>
+                                    <input asp-for="CheckOutDateInput" class="form-control form-control-lg date-input" type="date" />
+                                    <span asp-validation-for="CheckOutDateInput" class="text-danger small"></span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label asp-for="NumberOfGuests" class="form-label"></label>
-                            <input asp-for="NumberOfGuests" class="form-control" min="1" max="10" />
-                            <span asp-validation-for="NumberOfGuests" class="text-danger"></span>
+                        <div class="form-group mb-4">
+                            <label asp-for="NumberOfGuests" class="form-label fw-bold">
+                                <i class="fas fa-users me-2"></i>Số lượng khách
+                            </label>
+                            <input asp-for="NumberOfGuests" class="form-control form-control-lg" min="1" max="10" />
+                            <small class="form-text text-muted">
+                                <i class="fas fa-info-circle me-1"></i>Tối đa 10 khách mỗi phòng
+                            </small>
+                            <span asp-validation-for="NumberOfGuests" class="text-danger small"></span>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label asp-for="SpecialRequests" class="form-label"></label>
-                            <textarea asp-for="SpecialRequests" class="form-control" rows="4" placeholder="Any special requests?"></textarea>
-                            <span asp-validation-for="SpecialRequests" class="text-danger"></span>
+                        <div class="form-group mb-4">
+                            <label asp-for="SpecialRequests" class="form-label fw-bold">
+                                <i class="fas fa-concierge-bell me-2"></i>Yêu cầu đặc biệt
+                            </label>
+                            <textarea asp-for="SpecialRequests" class="form-control custom-textarea" rows="4"
+                                      placeholder="Vui lòng cho chúng tôi biết nếu bạn có yêu cầu đặc biệt nào..."></textarea>
+                            <span asp-validation-for="SpecialRequests" class="text-danger small"></span>
                         </div>
 
                         <!-- Booking Summary -->
-                        <div class="booking-summary mb-4 p-3 bg-light rounded">
-                            <h5>Booking Summary</h5>
+                        <div class="booking-summary mb-4 p-4">
+                            <h5 class="summary-title mb-3">
+                                <i class="fas fa-receipt me-2"></i>TÓM TẮT ĐẶT PHÒNG
+                            </h5>
                             <div class="row">
                                 <div class="col-6">
-                                    <p><strong>Room:</strong> @Model.RoomName</p>
-                                    <p><strong>Check-in:</strong> <span id="checkInDisplay">@Model.CheckInDateInput.ToString("MMM dd, yyyy")</span></p>
-                                    <p><strong>Check-out:</strong> <span id="checkOutDisplay">@Model.CheckOutDateInput.ToString("MMM dd, yyyy")</span></p>
+                                    <p class="summary-item">
+                                        <strong><i class="fas fa-home me-2"></i>Phòng:</strong> @Model.RoomName
+                                    </p>
+                                    <p class="summary-item">
+                                        <strong><i class="fas fa-sign-in-alt me-2"></i>Nhận phòng:</strong>
+                                        <span id="checkInDisplay">@Model.CheckInDateInput.ToString("MMM dd, yyyy")</span>
+                                    </p>
+                                    <p class="summary-item">
+                                        <strong><i class="fas fa-sign-out-alt me-2"></i>Trả phòng:</strong>
+                                        <span id="checkOutDisplay">@Model.CheckInDateInput.ToString("MMM dd, yyyy")</span>
+                                    </p>
                                 </div>
                                 <div class="col-6">
-                                    <p><strong>Nights:</strong> <span id="nightsCount">1</span></p>
-                                    <p><strong>Guests:</strong> <span id="guestsCount">@Model.NumberOfGuests</span></p>
-                                    <p><strong>Total:</strong> $<span id="totalPrice">0.00</span></p>
+                                    <p class="summary-item">
+                                        <strong><i class="fas fa-moon me-2"></i>Số đêm:</strong>
+                                        <span id="nightsCount" class="text-primary fw-bold">1</span>
+                                    </p>
+                                    <p class="summary-item">
+                                        <strong><i class="fas fa-users me-2"></i>Số khách:</strong>
+                                        <span id="guestsCount" class="fw-bold">@Model.NumberOfGuests</span>
+                                    </p>
+                                    <p class="summary-item total-price">
+                                        <strong><i class="fas fa-money-bill-wave me-2"></i>Tổng tiền:</strong>
+                                        <span id="totalPrice" class="fw-bold fs-5">$0.00</span>
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">Confirm Booking</button>
-                            <a href="@Url.Action("Details", "Rooms", new { id = Model.RoomId })" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-booking-confirm btn-lg py-3">
+                                <i class="fas fa-check-circle me-2"></i>XÁC NHẬN ĐẶT PHÒNG
+                            </button>
+                            <a href="@Url.Action("Details", "Rooms", new { id = Model.RoomId })"
+                               class="btn btn-booking-cancel btn-lg py-3">
+                                <i class="fas fa-arrow-left me-2"></i>QUAY LẠI
+                            </a>
                         </div>
                     </form>
                 </div>

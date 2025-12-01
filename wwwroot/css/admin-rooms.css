@@ -465,6 +465,10 @@
     background: linear-gradient(135deg, var(--success-color), #2ecc71);
     color: white;
 }
+.type-presidential {
+    background: linear-gradient(135deg, var(--accent-color), #0d52f3);
+    color: white;
+}
 
 .price-text {
     font-weight: 700;

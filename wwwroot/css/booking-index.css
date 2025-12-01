@@ -1,0 +1,401 @@
+﻿/* Bookings List Page Styles */
+:root {
+    --primary-gradient: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+    --success-gradient: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    --danger-gradient: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    --warning-gradient: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    --info-gradient: linear-gradient(135deg, #17a2b8 0%, #2980b9 100%);
+    --dark-gradient: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+    --light-bg: #f8f9fa;
+    --border-color: #e9ecef;
+    --text-primary: #2c3e50;
+    --text-secondary: #6c757d;
+    --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    --card-hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    --border-radius: 16px;
+}
+
+/* Page header */
+.page-header {
+    padding: 20px 0;
+    border-bottom: 3px solid var(--border-color);
+    margin-bottom: 30px;
+}
+
+.page-title {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 2rem;
+    letter-spacing: 0.5px;
+}
+
+    .page-title i {
+        color: #3498db;
+        background: linear-gradient(135deg, #3498db, #2c3e50);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+/* Booking cards */
+.booking-card {
+    border: none;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s ease;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    height: 100%;
+    position: relative;
+}
+
+    .booking-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--card-hover-shadow);
+    }
+
+    .booking-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--primary-gradient);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .booking-card:hover::before {
+        opacity: 1;
+    }
+
+    /* Card header */
+    .booking-card .card-header {
+        background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+        border-bottom: 2px solid var(--border-color);
+        padding: 1.25rem;
+    }
+
+.room-name {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+}
+
+    .room-name i {
+        color: #3498db;
+        font-size: 1.2rem;
+    }
+
+/* Booking status badges */
+.booking-status.badge {
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border: none;
+    min-width: 100px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bg-pending {
+    background: var(--warning-gradient) !important;
+    color: #fff !important;
+}
+
+.bg-confirmed {
+    background: var(--info-gradient) !important;
+    color: #fff !important;
+}
+
+.bg-checkedin {
+    background: var(--success-gradient) !important;
+    color: #fff !important;
+}
+
+.bg-checkedout {
+    background: var(--dark-gradient) !important;
+    color: #fff !important;
+}
+
+.bg-cancelled {
+    background: var(--danger-gradient) !important;
+    color: #fff !important;
+}
+
+/* Card body */
+.booking-card .card-body {
+    padding: 1.5rem;
+}
+
+.booking-dates {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.date-item {
+    margin-bottom: 12px;
+}
+
+    .date-item:last-child {
+        margin-bottom: 0;
+    }
+
+.date-label {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+    .date-label i {
+        font-size: 1rem;
+    }
+
+.date-value {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+.booking-info {
+    padding: 10px 0;
+}
+
+.info-item {
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+    .info-item:last-child {
+        border-bottom: none;
+    }
+
+.total-price {
+    font-size: 1.2rem;
+    color: #27ae60;
+}
+
+/* Card footer */
+.booking-card .card-footer {
+    padding: 1.5rem;
+    padding-top: 0;
+}
+
+/* Buttons */
+.btn-view-details {
+    background: transparent;
+    border: 2px solid #3498db;
+    border-radius: 10px;
+    color: #3498db;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 10px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .btn-view-details:hover {
+        background: #3498db;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+    }
+
+.btn-cancel-booking {
+    background: transparent;
+    border: 2px solid #e74c3c;
+    border-radius: 10px;
+    color: #e74c3c;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 10px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .btn-cancel-booking:hover {
+        background: var(--danger-gradient);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+    }
+
+/* Empty state */
+.empty-state {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+.empty-icon {
+    margin-bottom: 20px;
+}
+
+    .empty-icon i {
+        color: #bdc3c7;
+    }
+
+.empty-state h3 {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.empty-state p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+.btn-browse-rooms {
+    background: var(--primary-gradient);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 15px 30px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
+}
+
+    .btn-browse-rooms:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(52, 152, 219, 0.4);
+        color: white;
+    }
+
+/* Alert styles */
+.alert {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+.alert i {
+    font-size: 1.2rem;
+}
+
+.btn-close {
+    filter: invert(1);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .booking-card {
+        margin-bottom: 1.5rem;
+    }
+
+    .booking-status.badge {
+        font-size: 0.7rem;
+        padding: 6px 12px;
+        min-width: 80px;
+    }
+
+    .btn-view-details,
+    .btn-cancel-booking {
+        font-size: 0.8rem;
+        padding: 8px;
+    }
+
+    .empty-state {
+        padding: 40px 15px;
+    }
+
+    .btn-browse-rooms {
+        padding: 12px 24px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .row-cols-1 > * {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .booking-card {
+        border-radius: 12px;
+    }
+}
+
+
+
+   
+/* Hover effects for info items */
+.info-item {
+    transition: all 0.2s ease;
+}
+
+    .info-item:hover {
+        background: rgba(52, 152, 219, 0.05);
+        border-radius: 6px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+/* Custom scrollbar for alerts */
+.alert {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+    .alert::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .alert::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    .alert::-webkit-scrollbar-thumb {
+        background: #3498db;
+        border-radius: 3px;
+    }
+
+        .alert::-webkit-scrollbar-thumb:hover {
+            background: #2980b9;
+        }

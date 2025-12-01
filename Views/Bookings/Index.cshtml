@@ -1,56 +1,98 @@
 ﻿@model List<QuanLyKhachSan.ViewModels.Booking.BookingListViewModel>
 
 @{
-    ViewData["Title"] = "My Bookings";
+    ViewData["Title"] = "Lịch Sử Đặt Phòng";
 }
 
-<div class="container mt-5">
-    <h1 class="mb-4">My Bookings</h1>
+<div class="container mt-4">
+    <div class="page-header">
+        <h1 class="page-title mb-4">
+            <i class="fas fa-history me-3"></i>LỊCH SỬ ĐẶT PHÒNG
+        </h1>
+    </div>
 
     @if (TempData["SuccessMessage"] != null)
     {
-        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
     }
     @if (TempData["ErrorMessage"] != null)
     {
-        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
     }
 
     @if (Model.Any())
     {
-        <div class="row">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             @foreach (var booking in Model)
             {
-                <div class="col-md-6 mb-4">
+                <div class="col">
                     <div class="card booking-card h-100">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">@booking.RoomName</h5>
-                            <span class="badge bg-@booking.Status.ToString().ToLower()">@booking.Status</span>
+                            <h5 class="mb-0 room-name">
+                                <i class="fas fa-home me-2"></i>@booking.RoomName
+                            </h5>
+                            <span class="booking-status badge bg-@booking.Status.ToString().ToLower()">
+                                @booking.Status
+                            </span>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-6">
-                                    <p><strong>Check-in:</strong><br>@booking.CheckInDate.ToString("MMM dd, yyyy")</p>
-                                    <p><strong>Check-out:</strong><br>@booking.CheckOutDate.ToString("MMM dd, yyyy")</p>
+                            <div class="booking-dates mb-3">
+                                <div class="date-item">
+                                    <div class="date-label">
+                                        <i class="fas fa-sign-in-alt text-primary me-2"></i>NHẬN PHÒNG
+                                    </div>
+                                    <div class="date-value fw-bold">
+                                        @booking.CheckInDate.ToString("dd/MM/yyyy")
+                                    </div>
                                 </div>
-                                <div class="col-6">
-                                    <p><strong>Total:</strong><br>$@booking.TotalPrice.ToString("N2")</p>
-                                    <p><strong>Booked on:</strong><br>@booking.CreatedAt.ToString("MMM dd, yyyy")</p>
+                                <div class="date-item">
+                                    <div class="date-label">
+                                        <i class="fas fa-sign-out-alt text-primary me-2"></i>TRẢ PHÒNG
+                                    </div>
+                                    <div class="date-value fw-bold">
+                                        @booking.CheckOutDate.ToString("dd/MM/yyyy")
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="booking-info">
+                                <div class="info-item d-flex justify-content-between mb-2">
+                                    <span class="text-muted">
+                                        <i class="fas fa-money-bill-wave me-2"></i>Tổng tiền:
+                                    </span>
+                                    <span class="total-price fw-bold text-success">
+                                        $@booking.TotalPrice.ToString("N2")
+                                    </span>
+                                </div>
+                                <div class="info-item d-flex justify-content-between">
+                                    <span class="text-muted">
+                                        <i class="fas fa-calendar-plus me-2"></i>Ngày đặt:
+                                    </span>
+                                    <span class="fw-bold">
+                                        @booking.CreatedAt.ToString("dd/MM/yyyy")
+                                    </span>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer bg-transparent border-top-0 pt-0">
                             <div class="d-grid gap-2">
-                                <a href="@Url.Action("Details", "Bookings", new { id = booking.Id })" class="btn btn-outline-primary btn-sm">
-                                    View Details
+                                <a href="@Url.Action("Details", "Bookings", new { id = booking.Id })"
+                                   class="btn btn-view-details btn-sm">
+                                    <i class="fas fa-eye me-2"></i>XEM CHI TIẾT
                                 </a>
                                 @if (booking.Status == QuanLyKhachSan.Models.BookingStatus.Pending ||
                                                         booking.Status == QuanLyKhachSan.Models.BookingStatus.Confirmed)
                                 {
                                     <form method="post" asp-action="Cancel" asp-route-id="@booking.Id"
-                                          onsubmit="return confirm('Are you sure you want to cancel this booking?');">
-                                        <button type="submit" class="btn btn-outline-danger btn-sm w-100">
-                                            Cancel Booking
+                                          onsubmit="return confirm('Bạn có chắc chắn muốn hủy đặt phòng này?');">
+                                        <button type="submit" class="btn btn-cancel-booking btn-sm w-100">
+                                            <i class="fas fa-times-circle me-2"></i>HỦY ĐẶT PHÒNG
                                         </button>
                                     </form>
                                 }
@@ -63,46 +105,17 @@
     }
     else
     {
-        <div class="text-center">
-            <div class="alert alert-info">
-                <h4>No bookings found</h4>
-                <p>You haven't made any bookings yet.</p>
-                <a href="@Url.Action("Rooms", "Home")" class="btn btn-primary">Browse Rooms</a>
+        <div class="empty-state text-center py-5">
+            <div class="empty-icon mb-4">
+                <i class="fas fa-calendar-times fa-4x text-muted"></i>
             </div>
+            <h3 class="mb-3">CHƯA CÓ ĐẶT PHÒNG</h3>
+            <p class="text-muted mb-4">Bạn chưa thực hiện đặt phòng nào.</p>
+            <a href="@Url.Action("Rooms", "Home")" class="btn btn-browse-rooms">
+                <i class="fas fa-search me-2"></i>KHÁM PHÁ PHÒNG NGAY
+            </a>
         </div>
     }
 </div>
 
-<style>
-    .booking-card {
-        transition: transform 0.3s ease;
-        border: none;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-
-        .booking-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
-
-    .bg-pending {
-        background-color: #ffc107 !important;
-        color: #212529;
-    }
-
-    .bg-confirmed {
-        background-color: #17a2b8 !important;
-    }
-
-    .bg-checkedin {
-        background-color: #28a745 !important;
-    }
-
-    .bg-checkedout {
-        background-color: #6c757d !important;
-    }
-
-    .bg-cancelled {
-        background-color: #dc3545 !important;
-    }
-</style>
+<link rel="stylesheet" href="~/css/booking-index.css">

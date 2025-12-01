@@ -68,7 +68,7 @@
                         </div>
                         <div class="card-content">
                             <div class="card-label">Tổng Doanh Thu</div>
-                            <div class="card-value">@Model.TotalRevenue.ToString("N0")₫</div>
+                            <div class="card-value">@Model.TotalRevenue.ToString("N0")$</div>
                         </div>
                         <div class="card-wave"></div>
                     </div>
@@ -153,19 +153,23 @@
                                                     @switch (item.RoomType)
                                                     {
                                                         case "Standard":
-                                                            <span>Tiêu chuẩn</span>
+                                                            <span>Standard</span>
                                                             ; break;
                                                         case "Deluxe":
 
-                                                            <span>Cao cấp</span>
+                                                            <span>Duluxe</span>
                                                             ; break;
                                                         case "Suite":
 
-                                                            <span>Hạng sang</span>
+                                                            <span>Suite</span>
                                                             ; break;
                                                         case "Family":
 
-                                                            <span>Gia đình</span>
+                                                            <span>Family</span>
+                                                            ; break;
+                                                        case "Presidential":
+
+                                                            <span>Presidential</span>
                                                             ; break;
                                                         default:
 
@@ -217,7 +221,7 @@
                                                 <i class="fas fa-calendar"></i>
                                                 @item.Date.ToString("dd/MM/yyyy")
                                             </td>
-                                            <td class="revenue-cell">@item.Revenue.ToString("N0")₫</td>
+                                            <td class="revenue-cell">@item.Revenue.ToString("N0")$</td>
                                             <td class="count-cell">@item.BookingCount</td>
                                         </tr>
                                     }
@@ -251,7 +255,7 @@
                                 <div class="month-item">
                                     <div class="month-bar-wrapper">
                                         <div class="month-bar" style="height: @heightPercent%">
-                                            <span class="month-value">@item.Revenue.ToString("N0")₫</span>
+                                            <span class="month-value">@item.Revenue.ToString("N0")$</span>
                                             <span class="month-count">@item.BookingCount đặt</span>
                                         </div>
                                     </div>
