@@ -1,7 +1,7 @@
 ﻿@model QuanLyKhachSan.ViewModels.Payment.PaymentViewModel
 
 @{
-    ViewData["Title"] = "Payment";
+    ViewData["Title"] = "Thanh Toán";
 }
 
 <div class="container mt-5">
@@ -9,7 +9,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header bg-success text-white">
-                    <h3 class="mb-0">Payment</h3>
+                    <h3 class="mb-0">Thanh Toán</h3>
                 </div>
                 <div class="card-body">
                     @if (TempData["ErrorMessage"] != null)
@@ -23,19 +23,19 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <h5>Booking Summary</h5>
+                            <h5>Tóm Tắt Đặt Phòng</h5>
                             <div class="border p-3 rounded">
-                                <p><strong>Booking ID:</strong> #@Model.BookingId</p>
-                                <p><strong>Room:</strong> @Model.RoomName</p>
-                                <p><strong>Check-in:</strong> @Model.CheckInDate.ToString("MMM dd, yyyy")</p>
-                                <p><strong>Check-out:</strong> @Model.CheckOutDate.ToString("MMM dd, yyyy")</p>
-                                <p><strong>Guests:</strong> @Model.NumberOfGuests</p>
+                                <p><strong>Mã Đặt Phòng:</strong> #@Model.BookingId</p>
+                                <p><strong>Phòng:</strong> @Model.RoomName</p>
+                                <p><strong>Nhận phòng:</strong> @Model.CheckInDate.ToString("dd/MM/yyyy")</p>
+                                <p><strong>Trả phòng:</strong> @Model.CheckOutDate.ToString("dd/MM/yyyy")</p>
+                                <p><strong>Số khách:</strong> @Model.NumberOfGuests</p>
                                 <hr>
-                                <h5 class="text-success">Total: $@Model.TotalPrice.ToString("N2")</h5>
+                                <h5 class="text-success">Tổng tiền: $@Model.TotalPrice.ToString("N2")</h5>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <h5>Payment Method</h5>
+                            <h5>Phương Thức Thanh Toán</h5>
                             <form method="post" asp-controller="Payments" asp-action="ProcessPayment" id="paymentForm">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="bookingId" value="@Model.BookingId" />
@@ -44,7 +44,7 @@
                                     <input class="form-check-input" type="radio" name="paymentMethod"
                                            id="creditCard" value="Credit Card" checked>
                                     <label class="form-check-label" for="creditCard">
-                                        <i class="fas fa-credit-card me-2"></i>Credit Card
+                                        <i class="fas fa-credit-card me-2"></i>Thẻ Tín Dụng/Ghi Nợ
                                     </label>
                                 </div>
 
@@ -60,70 +60,70 @@
                                     <input class="form-check-input" type="radio" name="paymentMethod"
                                            id="bankTransfer" value="Bank Transfer">
                                     <label class="form-check-label" for="bankTransfer">
-                                        <i class="fas fa-university me-2"></i>Bank Transfer
+                                        <i class="fas fa-university me-2"></i>Chuyển Khoản Ngân Hàng
                                     </label>
                                 </div>
 
-                                <!-- Credit Card Form -->
+                                <!-- Form Thẻ Tín Dụng -->
                                 <div id="creditCardForm" class="payment-method-form">
                                     <div class="mb-3">
-                                        <label class="form-label">Card Number</label>
+                                        <label class="form-label">Số Thẻ</label>
                                         <input type="text" class="form-control" placeholder="1234 5678 9012 3456"
-                                               pattern="[0-9]{16}" title="Please enter a valid 16-digit card number" required>
+                                               pattern="[0-9]{16}" title="Vui lòng nhập số thẻ 16 chữ số hợp lệ" required>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label class="form-label">Expiry Date</label>
+                                                <label class="form-label">Ngày Hết Hạn</label>
                                                 <input type="text" class="form-control" placeholder="MM/YY"
-                                                       pattern="(0[1-9]|1[0-2])\/[0-9]{2}" title="Please enter a valid expiry date (MM/YY)" required>
+                                                       pattern="(0[1-9]|1[0-2])\/[0-9]{2}" title="Vui lòng nhập ngày hết hạn hợp lệ (MM/YY)" required>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label">CVV</label>
                                                 <input type="text" class="form-control" placeholder="123"
-                                                       pattern="[0-9]{3,4}" title="Please enter a valid CVV" required>
+                                                       pattern="[0-9]{3,4}" title="Vui lòng nhập CVV hợp lệ" required>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">Card Holder Name</label>
-                                        <input type="text" class="form-control" placeholder="John Doe" required>
+                                        <label class="form-label">Tên Chủ Thẻ</label>
+                                        <input type="text" class="form-control" placeholder="Nguyễn Văn A" required>
                                     </div>
                                 </div>
 
-                                <!-- PayPal Form -->
+                                <!-- Form PayPal -->
                                 <div id="paypalForm" class="payment-method-form" style="display: none;">
                                     <div class="alert alert-info">
-                                        <h6><i class="fab fa-paypal me-2"></i>PayPal Payment</h6>
-                                        <p class="mb-2">You will be redirected to PayPal to complete your payment.</p>
-                                        <p class="mb-0">Amount: <strong>$@Model.TotalPrice.ToString("N2")</strong></p>
+                                        <h6><i class="fab fa-paypal me-2"></i>Thanh Toán PayPal</h6>
+                                        <p class="mb-2">Bạn sẽ được chuyển hướng đến PayPal để hoàn tất thanh toán.</p>
+                                        <p class="mb-0">Số tiền: <strong>$@Model.TotalPrice.ToString("N2")</strong></p>
                                     </div>
                                     <div class="text-center">
                                         <i class="fab fa-paypal fa-3x text-primary mb-3"></i>
-                                        <p>Click "Pay Now" to proceed to PayPal</p>
+                                        <p>Nhấp "Thanh Toán Ngay" để chuyển đến PayPal</p>
                                     </div>
                                 </div>
 
-                                <!-- Bank Transfer Form -->
+                                <!-- Form Chuyển Khoản Ngân Hàng -->
                                 <div id="bankTransferForm" class="payment-method-form" style="display: none;">
                                     <div class="alert alert-warning">
-                                        <h6><i class="fas fa-university me-2"></i>Bank Transfer Information</h6>
-                                        <p class="mb-1">Please transfer the exact amount to our bank account:</p>
+                                        <h6><i class="fas fa-university me-2"></i>Thông Tin Chuyển Khoản</h6>
+                                        <p class="mb-1">Vui lòng chuyển khoản chính xác số tiền vào tài khoản ngân hàng của chúng tôi:</p>
                                     </div>
 
                                     <div class="bank-info p-3 border rounded mb-3">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <p><strong>Bank Name:</strong><br>Vietcombank</p>
-                                                <p><strong>Account Name:</strong><br>LUXURY HOTEL COMPANY</p>
-                                                <p><strong>Account Number:</strong><br>1234 5678 9012 3456</p>
+                                                <p><strong>Ngân hàng:</strong><br>Vietcombank</p>
+                                                <p><strong>Tên tài khoản:</strong><br>CÔNG TY KHÁCH SẠN LUXURY</p>
+                                                <p><strong>Số tài khoản:</strong><br>1234 5678 9012 3456</p>
                                             </div>
                                             <div class="col-md-6">
-                                                <p><strong>Branch:</strong><br>Ho Chi Minh City</p>
-                                                <p><strong>SWIFT Code:</strong><br>BFTVVNVX</p>
-                                                <p><strong>Amount:</strong><br><span class="text-success fw-bold">$@Model.TotalPrice.ToString("N2")</span></p>
+                                                <p><strong>Chi nhánh:</strong><br>Thành phố Hà Nội</p>
+                                                <p><strong>Mã SWIFT:</strong><br>BFTVVNVX</p>
+                                                <p><strong>Số tiền:</strong><br><span class="text-success fw-bold">$@Model.TotalPrice.ToString("N2")</span></p>
                                             </div>
                                         </div>
                                     </div>
@@ -131,33 +131,33 @@
                                     <div class="text-center mb-3">
                                         <div class="border p-3 d-inline-block">
                                             <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=LUXURYHOTEL@@Model.BookingId@@@Model.TotalPrice"
-                                                 alt="QR Code" class="img-fluid">
-                                            <p class="mt-2 small text-muted">Scan QR code for quick transfer</p>
+                                                 alt="Mã QR" class="img-fluid">
+                                            <p class="mt-2 small text-muted">Quét mã QR để chuyển khoản nhanh</p>
                                         </div>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label class="form-label">Transfer Reference</label>
-                                        <input type="text" class="form-control" placeholder="Your name or booking ID" required>
-                                        <small class="form-text text-muted">Please include Booking #@Model.BookingId in transfer description</small>
+                                        <label class="form-label">Nội Dung Chuyển Khoản</label>
+                                        <input type="text" class="form-control" placeholder="Tên của bạn hoặc mã đặt phòng" required>
+                                        <small class="form-text text-muted">Vui lòng ghi rõ Mã Đặt Phòng #@Model.BookingId trong nội dung chuyển khoản</small>
                                     </div>
 
                                     <div class="alert alert-info">
                                         <small>
                                             <i class="fas fa-info-circle me-1"></i>
-                                            Your booking will be confirmed once we receive the payment.
-                                            Processing may take 1-2 business days.
+                                            Đặt phòng của bạn sẽ được xác nhận sau khi chúng tôi nhận được thanh toán.
+                                            Quá trình xử lý có thể mất 1-2 ngày làm việc.
                                         </small>
                                     </div>
                                 </div>
 
                                 <div class="d-grid gap-2">
                                     <button type="submit" class="btn btn-success btn-lg">
-                                        <i class="fas fa-lock me-2"></i>Pay Now
+                                        <i class="fas fa-lock me-2"></i>Thanh Toán Ngay
                                     </button>
 
                                     <a href="@Url.Action("Details", "Bookings", new { id = Model.BookingId })"
-                                       class="btn btn-outline-secondary">Cancel Payment</a>
+                                       class="btn btn-outline-secondary">Hủy Thanh Toán</a>
                                 </div>
                             </form>
                         </div>
@@ -170,16 +170,16 @@
 
 @section Scripts {
     <script>
-        // Show/hide payment forms based on selection
+        // Hiển thị/ẩn form thanh toán dựa trên lựa chọn
         function showPaymentForm() {
             const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
 
-            // Hide all forms
+            // Ẩn tất cả form
             document.querySelectorAll('.payment-method-form').forEach(form => {
                 form.style.display = 'none';
             });
 
-            // Show selected form
+            // Hiển thị form được chọn
             if (selectedMethod === 'Credit Card') {
                 document.getElementById('creditCardForm').style.display = 'block';
             } else if (selectedMethod === 'PayPal') {
@@ -189,15 +189,15 @@
             }
         }
 
-        // Add event listeners to radio buttons
+        // Thêm event listeners cho radio buttons
         document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
             radio.addEventListener('change', showPaymentForm);
         });
 
-        // Initial state
+        // Trạng thái ban đầu
         showPaymentForm();
 
-        // Form validation
+        // Xác thực form
         document.getElementById('paymentForm').addEventListener('submit', function(e) {
             const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
             let isValid = true;
@@ -206,27 +206,27 @@
                 const cardNumber = document.querySelector('#creditCardForm input[placeholder="1234 5678 9012 3456"]');
                 const expiryDate = document.querySelector('#creditCardForm input[placeholder="MM/YY"]');
                 const cvv = document.querySelector('#creditCardForm input[placeholder="123"]');
-                const cardHolder = document.querySelector('#creditCardForm input[placeholder="John Doe"]');
+                const cardHolder = document.querySelector('#creditCardForm input[placeholder="Nguyễn Văn A"]');
 
                 if (!cardNumber.value || !expiryDate.value || !cvv.value || !cardHolder.value) {
                     e.preventDefault();
-                    alert('Please fill in all credit card details.');
+                    alert('Vui lòng điền đầy đủ thông tin thẻ tín dụng.');
                     isValid = false;
                 }
             } else if (paymentMethod === 'Bank Transfer') {
-                const transferRef = document.querySelector('#bankTransferForm input[placeholder="Your name or booking ID"]');
+                const transferRef = document.querySelector('#bankTransferForm input[placeholder="Tên của bạn hoặc mã đặt phòng"]');
                 if (!transferRef.value) {
                     e.preventDefault();
-                    alert('Please enter a transfer reference.');
+                    alert('Vui lòng nhập nội dung chuyển khoản.');
                     isValid = false;
                 }
             }
 
             if (isValid) {
-                // Show loading state
+                // Hiển thị trạng thái loading
                 const submitBtn = this.querySelector('button[type="submit"]');
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
             }
 
             return isValid;

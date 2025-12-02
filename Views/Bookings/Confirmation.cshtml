@@ -1,7 +1,7 @@
 ﻿@model QuanLyKhachSan.ViewModels.Booking.BookingConfirmationViewModel
 
 @{
-    ViewData["Title"] = "Booking Confirmation";
+    ViewData["Title"] = "Xác Nhận Đặt Phòng";
 }
 
 <div class="container mt-5">
@@ -9,53 +9,53 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header bg-success text-white text-center">
-                    <h3 class="mb-0"><i class="fas fa-check-circle me-2"></i>Booking Confirmed!</h3>
+                    <h3 class="mb-0"><i class="fas fa-check-circle me-2"></i>Đặt Phòng Thành Công!</h3>
                 </div>
                 <div class="card-body">
                     <div class="text-center mb-4">
                         <i class="fas fa-check-circle fa-5x text-success mb-3"></i>
-                        <h4>Thank you for your booking!</h4>
-                        <p class="text-muted">Your reservation has been successfully created.</p>
+                        <h4>Cảm ơn bạn đã đặt phòng!</h4>
+                        <p class="text-muted">Đặt chỗ của bạn đã được tạo thành công.</p>
                     </div>
 
                     <div class="booking-details p-4 border rounded">
-                        <h5 class="mb-3">Booking Details</h5>
+                        <h5 class="mb-3">Chi Tiết Đặt Phòng</h5>
                         <div class="row">
                             <div class="col-md-6">
-                                <p><strong>Booking ID:</strong> #@Model.BookingId</p>
-                                <p><strong>Room:</strong> @Model.RoomName</p>
-                                <p><strong>Check-in:</strong> @Model.CheckInDate.ToString("MMM dd, yyyy")</p>
+                                <p><strong>Mã Đặt Phòng:</strong> #@Model.BookingId</p>
+                                <p><strong>Phòng:</strong> @Model.RoomName</p>
+                                <p><strong>Nhận phòng:</strong> @Model.CheckInDate.ToString("dd/MM/yyyy")</p>
                             </div>
                             <div class="col-md-6">
-                                <p><strong>Status:</strong> <span class="badge bg-success">@Model.Status</span></p>
-                                <p><strong>Check-out:</strong> @Model.CheckOutDate.ToString("MMM dd, yyyy")</p>
-                                <p><strong>Guests:</strong> @Model.NumberOfGuests</p>
+                                <p><strong>Trạng thái:</strong> <span class="badge bg-success">@Model.Status</span></p>
+                                <p><strong>Trả phòng:</strong> @Model.CheckOutDate.ToString("dd/MM/yyyy")</p>
+                                <p><strong>Số khách:</strong> @Model.NumberOfGuests</p>
                             </div>
                         </div>
                         <hr>
                         <div class="text-center">
-                            <h4 class="text-success">Total: $@Model.TotalPrice.ToString("N2")</h4>
+                            <h4 class="text-success">Tổng tiền: $@Model.TotalPrice.ToString("N2")</h4>
                         </div>
                     </div>
 
                     <div class="mt-4 p-3 bg-light rounded">
-                        <h6>What's Next?</h6>
+                        <h6>Bước Tiếp Theo</h6>
                         <ul class="list-unstyled">
-                            <li><i class="fas fa-envelope text-primary me-2"></i> A confirmation email has been sent to you</li>
-                            <li><i class="fas fa-clock text-primary me-2"></i> Check-in time is from 2:00 PM</li>
-                            <li><i class="fas fa-credit-card text-primary me-2"></i> Payment will be processed at check-in</li>
+                            <li><i class="fas fa-envelope text-primary me-2"></i> Email xác nhận đã được gửi đến bạn</li>
+                            <li><i class="fas fa-clock text-primary me-2"></i> Giờ nhận phòng từ 14:00</li>
+                            <li><i class="fas fa-credit-card text-primary me-2"></i> Thanh toán sẽ được xử lý khi nhận phòng</li>
                         </ul>
                     </div>
 
                     <div class="d-grid gap-2 mt-4">
                         <a href="@Url.Action("Payment", "Payments", new { bookingId = Model.BookingId })" class="btn btn-primary btn-lg">
-                            <i class="fas fa-credit-card me-2"></i>Proceed to Payment
+                            <i class="fas fa-credit-card me-2"></i>Tiến Hành Thanh Toán
                         </a>
                         <a href="@Url.Action("Details", "Bookings", new { id = Model.BookingId })" class="btn btn-outline-secondary">
-                            View Booking Details
+                            Xem Chi Tiết Đặt Phòng
                         </a>
                         <a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary">
-                            Back to Home
+                            Quay Lại Trang Chủ
                         </a>
                     </div>
                 </div>
