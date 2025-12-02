@@ -36,7 +36,7 @@
                         </div>
                         <div class="col-md-6">
                             <h5>Phương Thức Thanh Toán</h5>
-                            <form method="post" asp-controller="Payments" asp-action="ProcessPayment" id="paymentForm">
+                            <form method="post" asp-controller="Payments" asp-action="ProcessPayment" id="paymentForm" novalidate>
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="bookingId" value="@Model.BookingId" />
 
@@ -69,27 +69,27 @@
                                     <div class="mb-3">
                                         <label class="form-label">Số Thẻ</label>
                                         <input type="text" class="form-control" placeholder="1234 5678 9012 3456"
-                                               pattern="[0-9]{16}" title="Vui lòng nhập số thẻ 16 chữ số hợp lệ" required>
+                                               pattern="[0-9]{16}" title="Vui lòng nhập số thẻ 16 chữ số hợp lệ" >
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Ngày Hết Hạn</label>
                                                 <input type="text" class="form-control" placeholder="MM/YY"
-                                                       pattern="(0[1-9]|1[0-2])\/[0-9]{2}" title="Vui lòng nhập ngày hết hạn hợp lệ (MM/YY)" required>
+                                                       pattern="(0[1-9]|1[0-2])\/[0-9]{2}" title="Vui lòng nhập ngày hết hạn hợp lệ (MM/YY)" >
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label">CVV</label>
                                                 <input type="text" class="form-control" placeholder="123"
-                                                       pattern="[0-9]{3,4}" title="Vui lòng nhập CVV hợp lệ" required>
+                                                       pattern="[0-9]{3,4}" title="Vui lòng nhập CVV hợp lệ" >
                                             </div>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Tên Chủ Thẻ</label>
-                                        <input type="text" class="form-control" placeholder="Nguyễn Văn A" required>
+                                        <input type="text" class="form-control" placeholder="Nguyễn Văn A" >
                                     </div>
                                 </div>
 
@@ -122,7 +122,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <p><strong>Chi nhánh:</strong><br>Thành phố Hà Nội</p>
-                                                <p><strong>Mã SWIFT:</strong><br>BFTVVNVX</p>
+                                                <p><strong>Mã giao dịch:</strong><br>ABCEFGH</p>
                                                 <p><strong>Số tiền:</strong><br><span class="text-success fw-bold">$@Model.TotalPrice.ToString("N2")</span></p>
                                             </div>
                                         </div>
@@ -138,7 +138,7 @@
 
                                     <div class="mb-3">
                                         <label class="form-label">Nội Dung Chuyển Khoản</label>
-                                        <input type="text" class="form-control" placeholder="Tên của bạn hoặc mã đặt phòng" required>
+                                        <input type="text" class="form-control" placeholder="Tên của bạn hoặc mã đặt phòng" >
                                         <small class="form-text text-muted">Vui lòng ghi rõ Mã Đặt Phòng #@Model.BookingId trong nội dung chuyển khoản</small>
                                     </div>
 
@@ -167,7 +167,6 @@
         </div>
     </div>
 </div>
-
 @section Scripts {
     <script>
         // Hiển thị/ẩn form thanh toán dựa trên lựa chọn
@@ -197,41 +196,90 @@
         // Trạng thái ban đầu
         showPaymentForm();
 
-        // Xác thực form
+        // Xác thực form - ĐÃ SỬA ĐỂ TRÁNH LỖI
         document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            // LUÔN ngăn default trước để xử lý bằng JS
+            e.preventDefault();
+
             const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
             let isValid = true;
+            let errorMessage = '';
 
+            // VALIDATION CHO THẺ TÍN DỤNG
             if (paymentMethod === 'Credit Card') {
-                const cardNumber = document.querySelector('#creditCardForm input[placeholder="1234 5678 9012 3456"]');
-                const expiryDate = document.querySelector('#creditCardForm input[placeholder="MM/YY"]');
-                const cvv = document.querySelector('#creditCardForm input[placeholder="123"]');
-                const cardHolder = document.querySelector('#creditCardForm input[placeholder="Nguyễn Văn A"]');
+                // SỬA: Dùng selector chính xác hơn
+                const cardNumber = document.querySelector('#creditCardForm input[name="cardNumber"]') ||
+                                   document.querySelector('#creditCardForm input[placeholder*="1234"]');
+                const expiryDate = document.querySelector('#creditCardForm input[name="expiryDate"]') ||
+                                   document.querySelector('#creditCardForm input[placeholder*="MM/YY"]');
+                const cvv = document.querySelector('#creditCardForm input[name="cvv"]') ||
+                            document.querySelector('#creditCardForm input[placeholder*="123"]');
+                const cardHolder = document.querySelector('#creditCardForm input[name="cardHolder"]') ||
+                                   document.querySelector('#creditCardForm input[placeholder*="Nguyễn"]');
 
-                if (!cardNumber.value || !expiryDate.value || !cvv.value || !cardHolder.value) {
-                    e.preventDefault();
-                    alert('Vui lòng điền đầy đủ thông tin thẻ tín dụng.');
+                if (!cardNumber || !cardNumber.value ||
+                    !expiryDate || !expiryDate.value ||
+                    !cvv || !cvv.value ||
+                    !cardHolder || !cardHolder.value) {
                     isValid = false;
+                    errorMessage = 'Vui lòng điền đầy đủ thông tin thẻ tín dụng.';
                 }
-            } else if (paymentMethod === 'Bank Transfer') {
-                const transferRef = document.querySelector('#bankTransferForm input[placeholder="Tên của bạn hoặc mã đặt phòng"]');
-                if (!transferRef.value) {
-                    e.preventDefault();
-                    alert('Vui lòng nhập nội dung chuyển khoản.');
+                // Thêm validation định dạng nếu muốn
+                else if (cardNumber.value && !/^\d{16}$/.test(cardNumber.value.replace(/\s/g, ''))) {
                     isValid = false;
+                    errorMessage = 'Số thẻ phải có đúng 16 chữ số.';
                 }
             }
+            // VALIDATION CHO CHUYỂN KHOẢN NGÂN HÀNG
+            else if (paymentMethod === 'Bank Transfer') {
+                const transferRef = document.querySelector('#bankTransferForm input[name="transferReference"]') ||
+                                    document.querySelector('#bankTransferForm input[placeholder*="Tên của bạn"]');
 
-            if (isValid) {
-                // Hiển thị trạng thái loading
-                const submitBtn = this.querySelector('button[type="submit"]');
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
+                if (!transferRef || !transferRef.value) {
+                    isValid = false;
+                    errorMessage = 'Vui lòng nhập nội dung chuyển khoản.';
+                }
+            }
+            // PAYPAL: không cần validation
+
+            if (!isValid) {
+                alert(errorMessage);
+                return false;
             }
 
-            return isValid;
+            // Nếu hợp lệ, hiển thị loading và submit form
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
+
+            // Submit form SAU KHI đã validate
+            setTimeout(() => {
+                this.submit();
+            }, 100);
+
+            return true;
         });
     </script>
+
+    <style>
+        .payment-method-form {
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: #f8f9fa;
+        }
+
+        .bank-info {
+            background-color: white;
+        }
+
+        .form-check-input:checked {
+            background-color: #198754;
+            border-color: #198754;
+        }
+    </style>
+}
 
     <style>
         .payment-method-form {
