@@ -1,77 +1,157 @@
 ﻿@model List<QuanLyKhachSan.ViewModels.Payment.PaymentHistoryViewModel>
 
 @{
-    ViewData["Title"] = "Payment History";
+    ViewData["Title"] = "Lịch Sử Thanh Toán";
 }
 
-<div class="container mt-5">
-    <h1 class="mb-4">Payment History</h1>
+<div class="container py-4">
+    <div class="page-header mb-5">
+        <h1 class="page-title">
+            <i class="fas fa-history me-3 text-primary"></i>LỊCH SỬ THANH TOÁN
+        </h1>
+        <p class="page-subtitle text-muted">Theo dõi tất cả các giao dịch thanh toán của bạn</p>
+    </div>
 
     @if (Model.Any())
     {
-        <div class="card">
-            <div class="card-body">
+        <div class="payment-history-card card border-0 shadow-lg">
+            <div class="card-header bg-gradient-primary text-white py-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0 text-black"><i class="fas fa-receipt me-2"></i>Danh Sách Giao Dịch</h5>
+                        <small class="opacity-75 text-black">@Model.Count giao dịch được tìm thấy</small>
+                    </div>
+                    <div class="payment-summary">
+                        <div class="text-end">
+                            <small class="d-block text-black">Tổng số tiền đã thanh toán</small>
+                            <h4 class="mb-0 text-black">$@Model.Sum(p => p.Amount).ToString("N2")</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
                             <tr>
-                                <th>Transaction ID</th>
-                                <th>Booking ID</th>
-                                <th>Room</th>
-                                <th>Amount</th>
-                                <th>Method</th>
-                                <th>Status</th>
-                                <th>Date</th>
+                                <th class="py-3">
+                                    <i class="fas fa-hashtag me-2"></i>Mã GD
+                                </th>
+                                <th class="py-3">
+                                    <i class="fas fa-calendar-check me-2"></i>Mã Đặt Phòng
+                                </th>
+                                <th class="py-3">
+                                    <i class="fas fa-home me-2"></i>Phòng
+                                </th>
+                                <th class="py-3">
+                                    <i class="fas fa-money-bill-wave me-2"></i>Số Tiền
+                                </th>
+                                <th class="py-3">
+                                    <i class="fas fa-credit-card me-2"></i>Phương Thức
+                                </th>
+                                <th class="py-3">
+                                    <i class="fas fa-info-circle me-2"></i>Trạng Thái
+                                </th>
+                                <th class="py-3">
+                                    <i class="fas fa-calendar-alt me-2"></i>Ngày Thanh Toán
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var payment in Model)
                             {
-                                <tr>
-                                    <td>@payment.TransactionId</td>
-                                    <td>#@payment.BookingId</td>
+                                <tr class="payment-row">
+                                    <td class="fw-bold">@payment.TransactionId</td>
+                                    <td class="text-primary fw-bold">#@payment.BookingId</td>
                                     <td>@payment.RoomName</td>
-                                    <td>$@payment.Amount.ToString("N2")</td>
-                                    <td>@payment.PaymentMethod</td>
                                     <td>
-                                        <span class="badge bg-@payment.Status.ToString().ToLower()">@payment.Status</span>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 me-2">
+                                                <i class="fas fa-dollar-sign"></i>
+                                            </span>
+                                            <span class="fw-bold">$@payment.Amount.ToString("N2")</span>
+                                        </div>
                                     </td>
-                                    <td>@payment.PaymentDate.ToString("MMM dd, yyyy")</td>
+                                    <td>
+                                        <span class="payment-method-badge">
+                                            <i class="@GetPaymentMethodIcon(payment.PaymentMethod) me-1"></i>
+                                            @payment.PaymentMethod
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="payment-status badge bg-@payment.Status.ToString().ToLower()">
+                                            <i class="@GetStatusIcon(payment.Status) me-1"></i>@payment.Status
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span class="date-badge me-2">
+                                                <i class="fas fa-calendar"></i>
+                                            </span>
+                                            <span>@payment.PaymentDate.ToString("dd/MM/yyyy")</span>
+                                        </div>
+                                    </td>
                                 </tr>
                             }
                         </tbody>
                     </table>
                 </div>
             </div>
+            <div class="card-footer bg-light py-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>Hiển thị @Model.Count giao dịch
+                        </small>
+                    </div>
+                 
+                </div>
+            </div>
         </div>
     }
     else
     {
-        <div class="text-center">
-            <div class="alert alert-info">
-                <h4>No payment history</h4>
-                <p>You haven't made any payments yet.</p>
-                <a href="@Url.Action("Index", "Bookings")" class="btn btn-primary">View My Bookings</a>
+        <div class="empty-state text-center py-5">
+            <div class="empty-icon mb-4">
+                <i class="fas fa-credit-card fa-4x text-muted"></i>
+            </div>
+            <h3 class="mb-3">CHƯA CÓ GIAO DỊCH</h3>
+            <p class="text-muted mb-4">Bạn chưa thực hiện thanh toán nào.</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="@Url.Action("Index", "Bookings")" class="btn btn-primary">
+                    <i class="fas fa-eye me-2"></i>XEM ĐẶT PHÒNG
+                </a>
+                <a href="@Url.Action("Index", "Rooms")" class="btn btn-outline-primary">
+                    <i class="fas fa-search me-2"></i>KHÁM PHÁ PHÒNG
+                </a>
             </div>
         </div>
     }
 </div>
 
-<style>
-    .bg-pending {
-        background-color: #ffc107 !important;
-        color: #212529;
+@functions {
+    public string GetPaymentMethodIcon(string method)
+    {
+        return method switch
+        {
+            "Credit Card" => "fas fa-credit-card",
+            "PayPal" => "fab fa-paypal",
+            "Bank Transfer" => "fas fa-university",
+            _ => "fas fa-money-bill-wave"
+        };
     }
 
-    .bg-completed {
-        background-color: #28a745 !important;
+    public string GetStatusIcon(QuanLyKhachSan.Models.PaymentStatus status)
+    {
+        return status switch
+        {
+            QuanLyKhachSan.Models.PaymentStatus.Completed => "fas fa-check-circle",
+            QuanLyKhachSan.Models.PaymentStatus.Pending => "fas fa-clock",
+            QuanLyKhachSan.Models.PaymentStatus.Failed => "fas fa-times-circle",
+            QuanLyKhachSan.Models.PaymentStatus.Refunded => "fas fa-redo",
+            _ => "fas fa-info-circle"
+        };
     }
+}
 
-    .bg-failed {
-        background-color: #dc3545 !important;
-    }
-
-    .bg-refunded {
-        background-color: #6c757d !important;
-    }
-</style>
+<link rel="stylesheet" href="~/css/payment-history.css">

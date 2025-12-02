@@ -1,14 +1,14 @@
 ﻿@model QuanLyKhachSan.ViewModels.Account.RegisterViewModel
 
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Đăng Ký";
 }
 
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">
-                <h3 class="text-center">Create Account</h3>
+                <h3 class="text-center">Register</h3>
             </div>
             <div class="card-body">
                 <form method="post">
@@ -17,14 +17,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group mb-3">
-                                <label asp-for="FirstName" class="form-label"></label>
+                                <label asp-for="FirstName" class="form-label">Họ</label>
                                 <input asp-for="FirstName" class="form-control" />
                                 <span asp-validation-for="FirstName" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group mb-3">
-                                <label asp-for="LastName" class="form-label"></label>
+                                <label asp-for="LastName" class="form-label">Tên</label>
                                 <input asp-for="LastName" class="form-control" />
                                 <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
@@ -32,34 +32,34 @@
                     </div>
 
                     <div class="form-group mb-3">
-                        <label asp-for="Email" class="form-label"></label>
+                        <label asp-for="Email" class="form-label">Email</label>
                         <input asp-for="Email" class="form-control" />
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label asp-for="DateOfBirth" class="form-label"></label>
+                        <label asp-for="DateOfBirth" class="form-label">Ngày Sinh</label>
                         <input asp-for="DateOfBirth" class="form-control" type="date" />
                         <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label asp-for="Password" class="form-label"></label>
+                        <label asp-for="Password" class="form-label">Mật Khẩu</label>
                         <input asp-for="Password" class="form-control" />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label asp-for="ConfirmPassword" class="form-label"></label>
+                        <label asp-for="ConfirmPassword" class="form-label">Xác Nhận Mật Khẩu</label>
                         <input asp-for="ConfirmPassword" class="form-control" />
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100">Register</button>
+                    <button type="submit" class="btn btn-primary w-100">Đăng Ký</button>
                 </form>
 
                 <div class="text-center mt-3">
-                    <p>Already have an account? <a href="@Url.Action("Login", "Account")">Login here</a></p>
+                    <p>Đã có tài khoản? <a href="@Url.Action("Login", "Account")">Đăng nhập tại đây</a></p>
                 </div>
             </div>
         </div>
