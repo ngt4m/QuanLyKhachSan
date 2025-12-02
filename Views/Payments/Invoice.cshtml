@@ -1,85 +1,85 @@
 ﻿@model QuanLyKhachSan.ViewModels.Payment.InvoiceViewModel
 
 @{
-    ViewData["Title"] = "Payment Invoice";
+    ViewData["Title"] = "Hóa Đơn Thanh Toán";
 }
 
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <!-- Invoice Header -->
+            <!-- Header Hóa Đơn -->
             <div class="card border-success">
                 <div class="card-header bg-success text-white text-center">
-                    <h3 class="mb-0"><i class="fas fa-check-circle me-2"></i>PAYMENT SUCCESSFUL</h3>
+                    <h3 class="mb-0"><i class="fas fa-check-circle me-2"></i>THANH TOÁN THÀNH CÔNG</h3>
                 </div>
                 <div class="card-body">
-                    <!-- Success Message -->
+                    <!-- Thông Báo Thành Công -->
                     <div class="text-center mb-4">
                         <i class="fas fa-check-circle fa-5x text-success mb-3"></i>
-                        <h4>Thank You for Your Payment!</h4>
-                        <p class="text-muted">Your payment has been processed successfully.</p>
+                        <h4>Cảm Ơn Bạn Đã Thanh Toán!</h4>
+                        <p class="text-muted">Thanh toán của bạn đã được xử lý thành công.</p>
                     </div>
 
-                    <!-- Invoice Details -->
+                    <!-- Chi Tiết Hóa Đơn -->
                     <div class="invoice-details border rounded p-4 mb-4">
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <h5 class="text-primary">LUXURY HOTEL</h5>
-                                <p class="mb-1">123 Hotel Street, District 1</p>
-                                <p class="mb-1">Ho Chi Minh City, Vietnam</p>
-                                <p class="mb-0">Phone: +84 28 3823 4567</p>
+                                <h5 class="text-primary">KHÁCH SẠN LUXURY</h5>
+                                <p class="mb-1">218 Lĩnh Nam, Hoàng Mai</p>
+                                <p class="mb-1">Thành phố Hà Nội, Việt Nam</p>
+                                <p class="mb-0">Điện thoại: +84 28 3823 4567</p>
                             </div>
                             <div class="col-md-6 text-end">
-                                <h5 class="text-primary">INVOICE</h5>
-                                <p class="mb-1"><strong>Invoice #:</strong> @Model.TransactionId</p>
-                                <p class="mb-1"><strong>Date:</strong> @Model.PaymentDate.ToString("MMM dd, yyyy HH:mm")</p>
-                                <p class="mb-0"><strong>Status:</strong> <span class="badge bg-success">PAID</span></p>
+                                <h5 class="text-primary">HÓA ĐƠN</h5>
+                                <p class="mb-1"><strong>Mã Hóa Đơn:</strong> @Model.TransactionId</p>
+                                <p class="mb-1"><strong>Ngày:</strong> @Model.PaymentDate.ToString("dd/MM/yyyy HH:mm")</p>
+                                <p class="mb-0"><strong>Trạng thái:</strong> <span class="badge bg-success">ĐÃ THANH TOÁN</span></p>
                             </div>
                         </div>
 
                         <hr>
 
-                        <!-- Customer Information -->
+                        <!-- Thông Tin Khách Hàng -->
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <h6>Bill To:</h6>
+                                <h6>Gửi Đến:</h6>
                                 <p class="mb-1"><strong>@Model.CustomerName</strong></p>
                                 <p class="mb-1">@Model.CustomerEmail</p>
                             </div>
                             <div class="col-md-6">
-                                <h6>Payment Method:</h6>
+                                <h6>Phương Thức Thanh Toán:</h6>
                                 <p class="mb-1"><strong>@Model.PaymentMethod</strong></p>
-                                <p class="mb-0">Transaction ID: @Model.TransactionId</p>
+                                <p class="mb-0">Mã Giao Dịch: @Model.TransactionId</p>
                             </div>
                         </div>
 
-                        <!-- Booking Details -->
+                        <!-- Chi Tiết Đặt Phòng -->
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Description</th>
-                                        <th>Check-in</th>
-                                        <th>Check-out</th>
-                                        <th>Guests</th>
-                                        <th class="text-end">Amount</th>
+                                        <th>Mô Tả</th>
+                                        <th>Nhận phòng</th>
+                                        <th>Trả phòng</th>
+                                        <th>Số khách</th>
+                                        <th class="text-end">Số tiền</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>
                                             <strong>@Model.RoomName</strong><br>
-                                            <small class="text-muted">Booking ID: #@Model.BookingId</small>
+                                            <small class="text-muted">Mã Đặt Phòng: #@Model.BookingId</small>
                                         </td>
-                                        <td>@Model.CheckInDate.ToString("MMM dd, yyyy")</td>
-                                        <td>@Model.CheckOutDate.ToString("MMM dd, yyyy")</td>
+                                        <td>@Model.CheckInDate.ToString("dd/MM/yyyy")</td>
+                                        <td>@Model.CheckOutDate.ToString("dd/MM/yyyy")</td>
                                         <td>@Model.NumberOfGuests</td>
                                         <td class="text-end">$@Model.Amount.ToString("N2")</td>
                                     </tr>
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="4" class="text-end"><strong>Total Amount:</strong></td>
+                                        <td colspan="4" class="text-end"><strong>Tổng tiền:</strong></td>
                                         <td class="text-end"><strong class="h5 text-success">$@Model.Amount.ToString("N2")</strong></td>
                                     </tr>
                                 </tfoot>
@@ -87,42 +87,42 @@
                         </div>
                     </div>
 
-                    <!-- Payment Confirmation -->
+                    <!-- Xác Nhận Thanh Toán -->
                     <div class="alert alert-success">
-                        <h6><i class="fas fa-info-circle me-2"></i>Payment Confirmation</h6>
-                        <p class="mb-2">Your payment of <strong>$@Model.Amount.ToString("N2")</strong> has been successfully processed.</p>
-                        <p class="mb-0">Transaction ID: <strong>@Model.TransactionId</strong></p>
+                        <h6><i class="fas fa-info-circle me-2"></i>Xác Nhận Thanh Toán</h6>
+                        <p class="mb-2">Thanh toán của bạn với số tiền <strong>$@Model.Amount.ToString("N2")</strong> đã được xử lý thành công.</p>
+                        <p class="mb-0">Mã Giao Dịch: <strong>@Model.TransactionId</strong></p>
                     </div>
 
-                    <!-- Next Steps -->
+                    <!-- Bước Tiếp Theo -->
                     <div class="border rounded p-3 bg-light">
-                        <h6>What's Next?</h6>
+                        <h6>Bước Tiếp Theo</h6>
                         <div class="row">
                             <div class="col-md-6">
                                 <ul class="list-unstyled">
-                                    <li><i class="fas fa-envelope text-primary me-2"></i> Invoice sent to your email</li>
-                                    <li><i class="fas fa-calendar-check text-primary me-2"></i> Booking confirmed</li>
+                                    <li><i class="fas fa-envelope text-primary me-2"></i> Hóa đơn đã gửi đến email của bạn</li>
+                                    <li><i class="fas fa-calendar-check text-primary me-2"></i> Đặt phòng đã được xác nhận</li>
                                 </ul>
                             </div>
                             <div class="col-md-6">
                                 <ul class="list-unstyled">
-                                    <li><i class="fas fa-door-open text-primary me-2"></i> Check-in from 2:00 PM</li>
-                                    <li><i class="fas fa-phone text-primary me-2"></i> Contact: +84 28 3823 4567</li>
+                                    <li><i class="fas fa-door-open text-primary me-2"></i> Nhận phòng từ 14:00</li>
+                                    <li><i class="fas fa-phone text-primary me-2"></i> Liên hệ: +84 28 3823 4567</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Action Buttons -->
+                    <!-- Nút Hành Động -->
                     <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
                         <button onclick="window.print()" class="btn btn-outline-primary me-md-2">
-                            <i class="fas fa-print me-2"></i>Print Invoice
+                            <i class="fas fa-print me-2"></i>In Hóa Đơn
                         </button>
                         <a href="@Url.Action("Details", "Bookings", new { id = Model.BookingId })" class="btn btn-primary me-md-2">
-                            <i class="fas fa-eye me-2"></i>View Booking
+                            <i class="fas fa-eye me-2"></i>Xem Đặt Phòng
                         </a>
                         <a href="@Url.Action("Index", "Home")" class="btn btn-success">
-                            <i class="fas fa-home me-2"></i>Back to Home
+                            <i class="fas fa-home me-2"></i>Về Trang Chủ
                         </a>
                     </div>
                 </div>
