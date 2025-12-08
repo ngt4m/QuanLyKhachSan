@@ -1,0 +1,205 @@
+﻿@model QuanLyKhachSan.ViewModels.Room.RoomDetailsViewModel
+
+@section Styles {
+    <link href="~/css/review.css" rel="stylesheet" />
+}
+
+<!-- Review Form Modal -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content review-modal-content">
+            <div class="modal-header review-modal-header">
+                <div class="header-content">
+                    <i class="fas fa-star-half-alt"></i>
+                    <h3 class="modal-title">Đánh Giá Phòng</h3>
+                </div>
+                <button type="button" class="btn-close-custom" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal-body review-modal-body">
+                <form method="post" asp-controller="Reviews" asp-action="Create" id="reviewForm">
+                    <input type="hidden" name="roomId" value="@Model.Id" />
+
+                    <!-- Room Info -->
+                    <div class="room-info-section">
+                        <div class="room-image-small">
+                            <img src="@Model.ImageUrl" alt="@Model.Name">
+                        </div>
+                        <div class="room-info-text">
+                            <h4>@Model.Name</h4>
+                            <p class="room-type">@Model.Type</p>
+                        </div>
+                    </div>
+
+                    <!-- Rating Section -->
+                    <div class="rating-section">
+                        <label class="form-label-custom">
+                            <i class="fas fa-star me-2"></i>
+                            Đánh giá của bạn
+                        </label>
+                        <div class="rating-description">
+                            Nhấp vào số sao để đánh giá trải nghiệm của bạn
+                        </div>
+
+                        <div class="star-rating">
+                            <input type="radio" name="rating" value="5" id="star5" required>
+                            <label for="star5" class="star-label" title="Xuất sắc">
+                                <i class="far fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </label>
+
+                            <input type="radio" name="rating" value="4" id="star4">
+                            <label for="star4" class="star-label" title="Tốt">
+                                <i class="far fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </label>
+
+                            <input type="radio" name="rating" value="3" id="star3">
+                            <label for="star3" class="star-label" title="Bình thường">
+                                <i class="far fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </label>
+
+                            <input type="radio" name="rating" value="2" id="star2">
+                            <label for="star2" class="star-label" title="Tệ">
+                                <i class="far fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </label>
+
+                            <input type="radio" name="rating" value="1" id="star1">
+                            <label for="star1" class="star-label" title="Rất tệ">
+                                <i class="far fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </label>
+                        </div>
+
+                        <div class="rating-feedback">
+                            <span class="rating-emoji">😊</span>
+                            <span class="rating-text">Chọn số sao</span>
+                        </div>
+                    </div>
+
+                    <!-- Comment Section -->
+                    <div class="comment-section">
+                        <label class="form-label-custom">
+                            <i class="fas fa-comment-dots me-2"></i>
+                            Chia sẻ trải nghiệm của bạn
+                        </label>
+                        <div class="rating-description">
+                            Hãy cho chúng tôi biết chi tiết về trải nghiệm của bạn
+                        </div>
+
+                        <textarea name="comment"
+                                  class="form-control-custom"
+                                  rows="5"
+                                  placeholder="Ví dụ: Phòng rất sạch sẽ, nhân viên thân thiện, view đẹp..."
+                                  required
+                                  minlength="10"
+                                  maxlength="500"></textarea>
+
+                        <div class="character-count">
+                            <span id="charCount">0</span>/500 ký tự
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit-review">
+                            <i class="fas fa-paper-plane me-2"></i>
+                            Gửi Đánh Giá
+                        </button>
+                        <button type="button" class="btn-cancel-review" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>
+                            Hủy Bỏ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Trigger Button (Thêm vào trang Room Details) -->
+<button type="button" class="btn-write-review" data-bs-toggle="modal" data-bs-target="#reviewModal">
+    <i class="fas fa-pen"></i>
+    <span>Viết Đánh Giá</span>
+</button>
+
+<script>
+    // Star rating functionality
+    const stars = document.querySelectorAll('.star-rating input');
+    const ratingEmoji = document.querySelector('.rating-emoji');
+    const ratingText = document.querySelector('.rating-text');
+
+    const ratingData = {
+        5: { emoji: '🤩', text: 'Xuất sắc!', color: '#43e97b' },
+        4: { emoji: '😊', text: 'Tốt!', color: '#4facfe' },
+        3: { emoji: '😐', text: 'Bình thường', color: '#f39c12' },
+        2: { emoji: '😕', text: 'Tệ', color: '#fa709a' },
+        1: { emoji: '😢', text: 'Rất tệ', color: '#e74c3c' }
+    };
+
+    stars.forEach(star => {
+        star.addEventListener('change', function() {
+            const rating = this.value;
+            const data = ratingData[rating];
+
+            ratingEmoji.textContent = data.emoji;
+            ratingText.textContent = data.text;
+            ratingText.style.color = data.color;
+
+            // Animation
+            ratingEmoji.style.animation = 'none';
+            setTimeout(() => {
+                ratingEmoji.style.animation = 'bounce 0.6s ease';
+            }, 10);
+        });
+    });
+
+    // Character counter
+    const commentTextarea = document.querySelector('textarea[name="comment"]');
+    const charCount = document.getElementById('charCount');
+
+    if (commentTextarea) {
+        commentTextarea.addEventListener('input', function() {
+            const count = this.value.length;
+            charCount.textContent = count;
+
+            if (count > 450) {
+                charCount.style.color = '#e74c3c';
+            } else {
+                charCount.style.color = '#7f8c8d';
+            }
+        });
+    }
+
+    // Form validation
+    document.getElementById('reviewForm').addEventListener('submit', function(e) {
+        const rating = document.querySelector('input[name="rating"]:checked');
+        const comment = document.querySelector('textarea[name="comment"]').value.trim();
+
+        if (!rating) {
+            e.preventDefault();
+            alert('⭐ Vui lòng chọn số sao đánh giá!');
+            return;
+        }
+
+        if (comment.length < 10) {
+            e.preventDefault();
+            alert('✍️ Nhận xét phải có ít nhất 10 ký tự!');
+            return;
+        }
+    });
+
+    // Reset form when modal closes
+    document.getElementById('reviewModal').addEventListener('hidden.bs.modal', function() {
+        document.getElementById('reviewForm').reset();
+        ratingEmoji.textContent = '😊';
+        ratingText.textContent = 'Chọn số sao';
+        ratingText.style.color = '#7f8c8d';
+        charCount.textContent = '0';
+        charCount.style.color = '#7f8c8d';
+    });
+</script>

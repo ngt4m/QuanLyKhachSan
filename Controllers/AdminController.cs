@@ -180,73 +180,109 @@ namespace QuanLyKhachSan.Controllers
             return View(model);
         }
 
-
-
         [HttpPost]
-        public async Task<IActionResult> EditRoom(RoomCreateViewModel model, IFormFile ImageFile)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditRoom(RoomCreateViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var room = await _context.Rooms.FindAsync(model.Id);
-                if (room == null)
-                {
-                    return NotFound();
-                }
+                return View(model);
+            }
 
-                // Xử lý upload ảnh mới
+            var room = await _context.Rooms.FindAsync(model.Id);
+            if (room == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                // Xử lý upload ảnh mới (nếu có)
                 string imageUrl = room.ImageUrl; // Giữ ảnh cũ mặc định
 
-                if (ImageFile != null && ImageFile.Length > 0)
+                // Lấy file từ Request.Form.Files để phù hợp với form có enctype="multipart/form-data"
+                if (Request.Form.Files.Count > 0)
                 {
-                    // Kiểm tra file có phải là ảnh không
-                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
-                    var extension = Path.GetExtension(ImageFile.FileName).ToLower();
+                    var imageFile = Request.Form.Files["ImageFile"];
 
-                    if (!allowedExtensions.Contains(extension))
+                    if (imageFile != null && imageFile.Length > 0)
                     {
-                        ModelState.AddModelError("ImageFile", "Chỉ chấp nhận file ảnh (JPG, PNG, GIF)");
-                        return View(model);
-                    }
+                        // Kiểm tra file có phải là ảnh không
+                        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+                        var extension = Path.GetExtension(imageFile.FileName).ToLower();
 
-                    // Kiểm tra kích thước file (max 5MB)
-                    if (ImageFile.Length > 5 * 1024 * 1024)
-                    {
-                        ModelState.AddModelError("ImageFile", "Kích thước ảnh không được vượt quá 5MB");
-                        return View(model);
-                    }
-
-                    // Xóa ảnh cũ nếu có (và không phải URL external)
-                    if (!string.IsNullOrEmpty(room.ImageUrl) && room.ImageUrl.StartsWith("/images/"))
-                    {
-                        var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", room.ImageUrl.TrimStart('/'));
-                        if (System.IO.File.Exists(oldImagePath))
+                        if (!allowedExtensions.Contains(extension))
                         {
-                            System.IO.File.Delete(oldImagePath);
+                            ModelState.AddModelError("ImageFile", "Chỉ chấp nhận file ảnh (JPG, PNG, GIF, WEBP)");
+                            return View(model);
                         }
+
+                        // Kiểm tra kích thước file (max 5MB)
+                        if (imageFile.Length > 5 * 1024 * 1024)
+                        {
+                            ModelState.AddModelError("ImageFile", "Kích thước ảnh không được vượt quá 5MB");
+                            return View(model);
+                        }
+
+                        // Xóa ảnh cũ nếu có (và không phải URL external, và không phải Base64)
+                        if (!string.IsNullOrEmpty(room.ImageUrl) &&
+                            !room.ImageUrl.StartsWith("data:image") &&
+                            room.ImageUrl.StartsWith("/images/rooms/"))
+                        {
+                            var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", room.ImageUrl.TrimStart('/'));
+                            if (System.IO.File.Exists(oldImagePath))
+                            {
+                                System.IO.File.Delete(oldImagePath);
+                            }
+                        }
+
+                        // Tạo tên file unique
+                        var fileName = $"{Guid.NewGuid()}{extension}";
+
+                        // Đường dẫn lưu file
+                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "rooms");
+
+                        // Tạo thư mục nếu chưa tồn tại
+                        if (!Directory.Exists(uploadsFolder))
+                        {
+                            Directory.CreateDirectory(uploadsFolder);
+                        }
+
+                        var filePath = Path.Combine(uploadsFolder, fileName);
+
+                        // Lưu file mới
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(fileStream);
+                        }
+
+                        // Cập nhật URL mới
+                        imageUrl = $"/images/rooms/{fileName}";
                     }
-
-                    // Tạo tên file unique
-                    var fileName = $"{Guid.NewGuid()}{extension}";
-
-                    // Đường dẫn lưu file
-                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "rooms");
-
-                    // Tạo thư mục nếu chưa tồn tại
-                    if (!Directory.Exists(uploadsFolder))
+                }
+                else
+                {
+                    // Kiểm tra xem có Base64 image từ hidden field không
+                    var imageBase64 = Request.Form["ImageUrl"].ToString();
+                    if (!string.IsNullOrEmpty(imageBase64) && imageBase64.StartsWith("data:image"))
                     {
-                        Directory.CreateDirectory(uploadsFolder);
+                        // Nếu có ảnh Base64 mới từ client
+                        if (!string.IsNullOrEmpty(room.ImageUrl) &&
+                            !room.ImageUrl.StartsWith("data:image") &&
+                            room.ImageUrl.StartsWith("/images/rooms/"))
+                        {
+                            // Xóa ảnh cũ
+                            var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", room.ImageUrl.TrimStart('/'));
+                            if (System.IO.File.Exists(oldImagePath))
+                            {
+                                System.IO.File.Delete(oldImagePath);
+                            }
+                        }
+
+                        // Giữ nguyên Base64 URL (client đã gửi lại ảnh cũ dạng Base64)
+                        imageUrl = imageBase64;
                     }
-
-                    var filePath = Path.Combine(uploadsFolder, fileName);
-
-                    // Lưu file mới
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await ImageFile.CopyToAsync(fileStream);
-                    }
-
-                    // Cập nhật URL mới
-                    imageUrl = $"/images/rooms/{fileName}";
+                    // Nếu không có file mới và không có Base64, giữ nguyên ảnh cũ
                 }
 
                 // Cập nhật thông tin phòng
@@ -266,8 +302,11 @@ namespace QuanLyKhachSan.Controllers
                 TempData["SuccessMessage"] = "Cập nhật phòng thành công!";
                 return RedirectToAction("AdminRooms");
             }
-
-            return View(model);
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Có lỗi xảy ra: {ex.Message}");
+                return View(model);
+            }
         }
 
         [HttpPost]

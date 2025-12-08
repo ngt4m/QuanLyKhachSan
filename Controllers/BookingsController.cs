@@ -49,7 +49,7 @@ namespace QuanLyKhachSan.Controllers
                 var room = await _context.Rooms.FindAsync(model.RoomId);
                 if (room == null || !room.IsAvailable)
                 {
-                    ModelState.AddModelError("", "Room is not available.");
+                    ModelState.AddModelError("", "Phòng không có sẵn.");
                     return View(model);
                 }
 
@@ -58,7 +58,23 @@ namespace QuanLyKhachSan.Controllers
 
                 if (numberOfDays <= 0)
                 {
-                    ModelState.AddModelError("", "Check-out date must be after check-in date.");
+                    ModelState.AddModelError("", "Ngày trả phòng phải sau ngày nhận phòng.");
+                    return View(model);
+                }
+
+                // Kiểm tra xem phòng đã được đặt trong khoảng thời gian này chưa
+                var isRoomBooked = await _context.Bookings
+                    .Where(b => b.RoomId == model.RoomId)
+                    .Where(b => b.Status != BookingStatus.Cancelled &&
+                                b.Status != BookingStatus.CheckedOut)
+                    .AnyAsync(b =>
+                        // Kiểm tra nếu có bất kỳ booking nào overlap với thời gian đặt mới
+                        (model.CheckInDateInput < b.CheckOutDate && model.CheckOutDateInput > b.CheckInDate)
+                    );
+
+                if (isRoomBooked)
+                {
+                    TempData["ErrorMessage"] = "Phòng đã được đặt trong khoảng thời gian này. Vui lòng chọn ngày khác.";
                     return View(model);
                 }
 
@@ -79,6 +95,7 @@ namespace QuanLyKhachSan.Controllers
                 _context.Bookings.Add(booking);
                 await _context.SaveChangesAsync();
 
+                TempData["SuccessMessage"] = "Đặt phòng thành công!";
                 return RedirectToAction("Confirmation", new { id = booking.Id });
             }
 
@@ -173,19 +190,56 @@ namespace QuanLyKhachSan.Controllers
                 return NotFound();
             }
 
-            //Only allow cancellation if check -in is at least 24 hours away
-            if (booking.CheckInDate <= DateTime.Now.AddHours(24))
+            // Chỉ cho phép hủy nếu chưa check-in
+            if (booking.Status == BookingStatus.CheckedIn)
             {
-                TempData["ErrorMessage"] = "Cannot cancel booking within 24 hours of check-in.";
+                TempData["ErrorMessage"] = "Không thể hủy booking khi đã check-in.";
                 return RedirectToAction("Details", new { id });
             }
+
+            if (booking.Status == BookingStatus.CheckedOut)
+            {
+                TempData["ErrorMessage"] = "Không thể hủy booking đã hoàn thành.";
+                return RedirectToAction("Details", new { id });
+            }
+
+            if (booking.Status == BookingStatus.Cancelled)
+            {
+                TempData["ErrorMessage"] = "Booking này đã được hủy trước đó.";
+                return RedirectToAction("Details", new { id });
+            }
+
+            // Optional: Kiểm tra thời gian hủy (24 giờ trước check-in)
+            // if (booking.CheckInDate <= DateTime.Now.AddHours(24))
+            // {
+            //     TempData["ErrorMessage"] = "Không thể hủy booking trong vòng 24 giờ trước khi check-in.";
+            //     return RedirectToAction("Details", new { id });
+            // }
 
             booking.Status = BookingStatus.Cancelled;
             booking.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Booking cancelled successfully!";
+            TempData["SuccessMessage"] = "Hủy đặt phòng thành công!";
             return RedirectToAction("Details", new { id });
+        }
+
+        // Helper method: Kiểm tra phòng có available trong khoảng thời gian không
+        private async Task<bool> IsRoomAvailable(int roomId, DateTime checkIn, DateTime checkOut, int? excludeBookingId = null)
+        {
+            var query = _context.Bookings
+                .Where(b => b.RoomId == roomId)
+                .Where(b => b.Status != BookingStatus.Cancelled &&
+                            b.Status != BookingStatus.CheckedOut)
+                .Where(b => checkIn < b.CheckOutDate && checkOut > b.CheckInDate);
+
+            // Exclude current booking khi edit
+            if (excludeBookingId.HasValue)
+            {
+                query = query.Where(b => b.Id != excludeBookingId.Value);
+            }
+
+            return !await query.AnyAsync();
         }
     }
 }

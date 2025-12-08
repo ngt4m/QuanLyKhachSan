@@ -15,7 +15,7 @@ namespace QuanLyKhachSan.Data
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Payment> Payments { get; set; }
-        public DbSet<Service> Services { get; set; }
+        //public DbSet<Service> Services { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

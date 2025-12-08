@@ -43,8 +43,12 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Profile</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Bookings" asp-action="Index">My Bookings</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Payments" asp-action="PaymentHistory">Payment History</a></li>
+                                    @if (User.IsInRole("User"))
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Bookings" asp-action="Index">My Bookings</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Payments" asp-action="PaymentHistory">Payment History</a></li>
+                                    }
+
                                     @if (User.IsInRole("Admin"))
                                     {
                                         <li><hr class="dropdown-divider"></li>

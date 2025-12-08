@@ -1,0 +1,415 @@
+﻿/* ===== Variables ===== */
+:root {
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-gold: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --gradient-green: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    --text-dark: #2c3e50;
+    --text-light: #7f8c8d;
+}
+
+/* ===== Trigger Button ===== */
+.btn-write-review {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 35px;
+    background: var(--gradient-gold);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
+}
+
+    .btn-write-review:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(240, 147, 251, 0.5);
+    }
+
+    .btn-write-review i {
+        font-size: 1.2rem;
+    }
+
+/* ===== Modal Styling ===== */
+.review-modal-content {
+    border: none;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.review-modal-header {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 30px 40px;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .review-modal-header .header-content {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+        .review-modal-header .header-content i {
+            font-size: 2rem;
+        }
+
+    .review-modal-header .modal-title {
+        font-size: 1.8rem;
+        font-weight: 900;
+        margin: 0;
+    }
+
+.btn-close-custom {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+}
+
+    .btn-close-custom:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg);
+    }
+
+.review-modal-body {
+    padding: 40px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+/* ===== Room Info Section ===== */
+.room-info-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.room-image-small {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+    .room-image-small img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.room-info-text h4 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin: 0 0 5px 0;
+}
+
+.room-type {
+    color: var(--text-light);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* ===== Form Labels ===== */
+.form-label-custom {
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.rating-description {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* ===== Star Rating ===== */
+.rating-section {
+    margin-bottom: 35px;
+}
+
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+    .star-rating input {
+        display: none;
+    }
+
+.star-label {
+    cursor: pointer;
+    font-size: 3rem;
+    color: #e0e0e0;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+    .star-label .far {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .star-label .fas {
+        opacity: 0;
+        transform: scale(0);
+        transition: all 0.3s ease;
+    }
+
+/* Hover effect */
+.star-rating:hover .star-label .fas {
+    opacity: 1;
+    transform: scale(1);
+    color: #ffa500;
+}
+
+.star-rating .star-label:hover ~ .star-label .fas {
+    opacity: 1;
+    transform: scale(1);
+    color: #ffa500;
+}
+
+/* Selected state */
+.star-rating input:checked ~ .star-label .fas {
+    opacity: 1;
+    transform: scale(1);
+    color: #ffa500;
+    animation: starBounce 0.5s ease;
+}
+
+.star-rating input:checked ~ .star-label .far {
+    opacity: 0;
+}
+
+@keyframes starBounce {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.3);
+    }
+}
+
+/* ===== Rating Feedback ===== */
+.rating-feedback {
+    text-align: center;
+    padding: 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.rating-emoji {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.rating-text {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--text-light);
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    25% {
+        transform: translateY(-20px);
+    }
+
+    50% {
+        transform: translateY(0);
+    }
+
+    75% {
+        transform: translateY(-10px);
+    }
+}
+
+/* ===== Comment Section ===== */
+.comment-section {
+    margin-bottom: 35px;
+}
+
+.form-control-custom {
+    width: 100%;
+    padding: 15px 20px;
+    border: 3px solid #e8ecf1;
+    border-radius: 15px;
+    font-size: 1rem;
+    font-weight: 600;
+    resize: vertical;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+    .form-control-custom:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 5px rgba(102, 126, 234, 0.15);
+        outline: none;
+    }
+
+    .form-control-custom::placeholder {
+        color: #cbd5e0;
+        font-weight: 500;
+    }
+
+.character-count {
+    text-align: right;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+/* ===== Form Actions ===== */
+.form-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-submit-review,
+.btn-cancel-review {
+    flex: 1;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-submit-review {
+    background: var(--gradient-green);
+    color: white;
+    box-shadow: 0 8px 25px rgba(67, 233, 123, 0.4);
+}
+
+    .btn-submit-review:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(67, 233, 123, 0.5);
+    }
+
+.btn-cancel-review {
+    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+    color: white;
+    box-shadow: 0 8px 25px rgba(149, 165, 166, 0.3);
+}
+
+    .btn-cancel-review:hover {
+        background: linear-gradient(135deg, #7f8c8d, #6c7a7b);
+        transform: translateY(-3px);
+    }
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .review-modal-header {
+        padding: 25px;
+    }
+
+        .review-modal-header .modal-title {
+            font-size: 1.4rem;
+        }
+
+    .review-modal-body {
+        padding: 25px;
+    }
+
+    .room-info-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .star-label {
+        font-size: 2.5rem;
+    }
+
+    .rating-emoji {
+        font-size: 2.5rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 576px) {
+    .review-modal-header .header-content i {
+        font-size: 1.5rem;
+    }
+
+    .review-modal-header .modal-title {
+        font-size: 1.2rem;
+    }
+
+    .star-label {
+        font-size: 2rem;
+    }
+
+    .star-rating {
+        gap: 10px;
+    }
+
+    .rating-emoji {
+        font-size: 2rem;
+    }
+
+    .rating-text {
+        font-size: 1rem;
+    }
+}
+
+/* ===== Modal Backdrop ===== */
+.modal-backdrop.show {
+    opacity: 0.8;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.5), rgba(118, 75, 162, 0.5));
+}
+
+/* ===== Modal Animation ===== */
+.modal.fade .modal-dialog {
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    transform: scale(0.8);
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
+}
